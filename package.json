@@ -1,0 +1,26 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "compile": "lerna run compile",
+    "compile:watch": "lerna run --parallel compile:watch",
+    "test": "lerna run test"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "jest": "^27.0.4",
+    "jest-date-mock": "^1.0.8",
+    "jest-extended": "^0.11.5",
+    "lerna": "^4.0.0",
+    "nodemon": "^2.0.7",
+    "npm-run-all": "^4.1.5",
+    "source-map-support": "^0.5.19",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "postonents": "^0.4.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "packages": [
+    "src/business-packages/*",
+    "src/technical-packages/*",
+    "src/data-packages/*",
+    "src/prototype-packages/*",
+    "src/api/*",
+    "src/cli/*",
+    "src/apps/*"
+  ],
+  "version": "1.0.0"
+}

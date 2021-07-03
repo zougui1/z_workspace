@@ -1,0 +1,27 @@
+{
+  "name": "@zougui/thread-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib",
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "start": "nodemon -r source-map-support/register lib",
+    "build": "npm-run-all clean compile",
+    "clean": "rm -rf ./lib",
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@zougui/logger": "^1.0.0",
+    "@zougui/thread-list": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "jest": "^27.0.4"
+  }
+}
