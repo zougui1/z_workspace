@@ -1,6 +1,5 @@
-import { EventEmitter } from 'events';
-
 import _ from 'lodash';
+import Emittery from 'emittery';
 import { PartialDeep } from 'type-fest';
 
 import { threadList } from '@zougui/thread-list';
@@ -9,7 +8,7 @@ import { ILog } from '../log';
 import { LoggerConfig, LoggerBaseConfig } from '../config';
 import { LogLevel } from '../enums';
 
-export abstract class BaseLogger<TConf extends (boolean | LoggerBaseConfig)> extends EventEmitter {
+export abstract class BaseLogger<TConf extends (boolean | LoggerBaseConfig), TEmitter extends Record<string, any> = any> extends Emittery<TEmitter & BaseLoggerEmitter> {
 
   protected readonly _name: string;
   protected readonly _fullConfig: LoggerConfig;
@@ -49,7 +48,7 @@ export abstract class BaseLogger<TConf extends (boolean | LoggerBaseConfig)> ext
 
   //#region region
   private _init() {
-    this.on('logged', (logId: string) => {
+    this.on('logged', logId => {
       const threadId = this._threads[logId];
 
       if (typeof threadId === 'string') {
@@ -59,4 +58,8 @@ export abstract class BaseLogger<TConf extends (boolean | LoggerBaseConfig)> ext
     });
   }
   //#endregion
+}
+
+type BaseLoggerEmitter = {
+  logged: string;
 }

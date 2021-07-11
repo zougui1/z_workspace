@@ -4,6 +4,14 @@ export type LoggerBaseConfig = {
   levels?: LogLevel[];
 }
 
+export type BatchConfig = {
+  interval: number;
+  logCount: {
+    min: number;
+    max: number;
+  };
+};
+
 export type LoggerConsoleConfig = boolean | LoggerBaseConfig;
 
 export type LoggerFileConfig = boolean | {
@@ -11,24 +19,12 @@ export type LoggerFileConfig = boolean | {
 } & LoggerBaseConfig;
 
 export type LoggerDatabaseConfig = {
-  batch: {
-    interval: number;
-    logCount: {
-      min: number;
-      max: number;
-    };
-  };
+  batch: BatchConfig;
 } & LoggerBaseConfig;
 
 export type LoggerHttpConfig = {
   url: string;
-  batch: {
-    interval: number;
-    logCount: {
-      min: number;
-      max: number;
-    };
-  };
+  batch: BatchConfig;
 } & LoggerBaseConfig
 
 export type LoggerEmailConfig = {
@@ -36,13 +32,7 @@ export type LoggerEmailConfig = {
   to: string;
   user: string;
   password: string;
-  batch: {
-    interval: number;
-    logCount: {
-      min: number;
-      max: number;
-    };
-  };
+  batch: BatchConfig;
 } & LoggerBaseConfig
 
 export type LoggerDiscordConfig = {

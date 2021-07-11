@@ -1,18 +1,16 @@
 import nodemailer from 'nodemailer';
 import moment from 'moment';
 
-import { threadList } from '@zougui/thread-list';
-
 import { formatEmail } from './formatEmail';
-import { BaseLogger } from '../BaseLogger';
+
+import { BatchLogger, BatchedLog } from '../BatchLogger';
 import { LoggerConfig, LoggerEmailConfig } from '../../config';
 import { ILog } from '../../log';
 
-export class EmailLogger extends BaseLogger<LoggerEmailConfig> {
+export class EmailLogger extends BatchLogger<LoggerEmailConfig> {
 
   private _nodemailer: typeof nodemailer = require('nodemailer');
   private _email: nodemailer.Transporter<nodemailer.SentMessageInfo>;
-  private _logs: Record<string, { log: ILog; callback: (err?: any) => void }> = {};
 
   constructor(fullConfig: LoggerConfig, config: LoggerEmailConfig) {
     super('email', fullConfig, config);
@@ -24,34 +22,15 @@ export class EmailLogger extends BaseLogger<LoggerEmailConfig> {
         pass: config.password,
       },
     });
-    this.init();
   }
 
   //#region logging
   protected async print(log: ILog): Promise<void> {
     log.time.createdAt = moment(log.time.createdAt).format(log.time.format);
-    this.emit('logged', log.logId);
-
-    return new Promise<void>((resolve, reject) => {
-      this._logs[log.logId] = {
-        log,
-        callback: err => {
-          if (err) return reject(err);
-          resolve();
-        }
-      };
-
-      const { max } = this._config.batch.logCount;
-      const logs = Object.values(this._logs);
-
-      if (logs.length >= max) {
-        this.sendLogs();
-      }
-    });
+    await super.print(log);
   }
 
-  protected async sendLogs(): Promise<void> {
-    const logs = Object.values(this._logs);
+  protected async sendLogs(logs: BatchedLog[]): Promise<void> {
     const subject = `Logger/${logs[0]?.log.context.app.name} (${logs.length} logs):`;
 
     const email = {
@@ -69,39 +48,11 @@ export class EmailLogger extends BaseLogger<LoggerEmailConfig> {
         });
       });
     } catch (error) {
-      for (const { log, callback } of logs) {
-        delete this._logs[log.logId];
-        callback(error);
-      }
+      const errorLogs = logs.map(log => ({ ...log, error }));
+      this.emit('batch-error', errorLogs);
     }
 
-    for (const { log, callback } of logs) {
-      delete this._logs[log.logId];
-      callback();
-    }
-  }
-  //#endregion
-
-  //#region private
-  private init(): void {
-    const { interval } = this._config.batch;
-
-    setInterval(() => {
-      this.flush();
-    }, interval);
-
-    threadList.addCleanup(async () => {
-      this.flush();
-    });
-  }
-
-  private flush(): void {
-    const { logCount } = this._config.batch;
-    const logs = Object.values(this._logs);
-
-    if (logs.length >= logCount.min) {
-      this.sendLogs();
-    }
+    this.emit('batch-logged', logs);
   }
   //#endregion
 }
