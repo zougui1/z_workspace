@@ -1,8 +1,7 @@
 import os from 'os';
 import { clamp, applyPercentage } from '@zougui/utils';
-import { normalizeLoggerConfig } from '@zougui/logger';
 
-import { IRawBackupConfig, IBackupConfig, Backup, IRawReason, IReason } from './backup-config-types';
+import { IBackupConfig, Backup, IRawReason, IReason } from './backup-config-types';
 
 const normalizeReason = (reason: IRawReason): IReason => {
   const cpus = os.cpus();
@@ -16,11 +15,10 @@ const normalizeReason = (reason: IRawReason): IReason => {
   };
 }
 
-export const normalizeBackupConfig = (rawConf: unknown): IBackupConfig => {
-  const rawBackupConfig = rawConf as IRawBackupConfig;
-  const commonExcludes = rawBackupConfig.filesystem.excludes ?? [];
+export const normalizeBackupConfig = (rawConf: any): IBackupConfig => {
+  const commonExcludes = rawConf.filesystem.excludes ?? [];
 
-  const backups: Backup[] = rawBackupConfig.filesystem.backups.map(rawBackup => {
+  const backups: Backup[] = rawConf.filesystem.backups.map((rawBackup: any) => {
     const inputs = 'inputs' in rawBackup
       ? rawBackup.inputs
       : [rawBackup.input];
@@ -34,16 +32,15 @@ export const normalizeBackupConfig = (rawConf: unknown): IBackupConfig => {
   });
 
   return {
-    ...rawBackupConfig,
-    logs: normalizeLoggerConfig(rawBackupConfig.logs),
+    ...rawConf,
     filesystem: {
-      ...rawBackupConfig.filesystem,
+      ...rawConf.filesystem,
       reasons: {
-        manual: normalizeReason(rawBackupConfig.filesystem.reasons.manual),
-        boot: normalizeReason(rawBackupConfig.filesystem.reasons.boot),
-        packageInstall: normalizeReason(rawBackupConfig.filesystem.reasons.packageInstall),
-        packageUpgrade: normalizeReason(rawBackupConfig.filesystem.reasons.packageUpgrade),
-        packageRemove: normalizeReason(rawBackupConfig.filesystem.reasons.packageRemove),
+        manual: normalizeReason(rawConf.filesystem.reasons.manual),
+        boot: normalizeReason(rawConf.filesystem.reasons.boot),
+        packageInstall: normalizeReason(rawConf.filesystem.reasons.packageInstall),
+        packageUpgrade: normalizeReason(rawConf.filesystem.reasons.packageUpgrade),
+        packageRemove: normalizeReason(rawConf.filesystem.reasons.packageRemove),
       },
       backups,
     }

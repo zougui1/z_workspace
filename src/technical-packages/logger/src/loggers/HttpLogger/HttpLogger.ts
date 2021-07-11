@@ -1,6 +1,8 @@
 import axios from 'axios';
 import moment from 'moment';
 
+import { threadList } from '@zougui/thread-list';
+
 import { BaseLogger } from '../BaseLogger';
 import { LoggerConfig, LoggerHttpConfig } from '../../config';
 import { ILog } from '../../log';
@@ -18,6 +20,7 @@ export class HttpLogger extends BaseLogger<LoggerHttpConfig> {
   //#region logging
   protected print(log: ILog): Promise<void> {
     log.time.createdAt = moment(log.time.createdAt).format(log.time.format);
+    this.emit('logged', log.logId);
 
     return new Promise<void>((resolve, reject) => {
       this._logs[log.logId] = {
@@ -39,6 +42,7 @@ export class HttpLogger extends BaseLogger<LoggerHttpConfig> {
 
   protected async sendLogs(): Promise<void> {
     const logs = Object.values(this._logs);
+    this._logs = {};
 
     try {
       await axios.post(this._config.url, logs.map(log => log.log));
@@ -49,7 +53,6 @@ export class HttpLogger extends BaseLogger<LoggerHttpConfig> {
     }
 
     for (const { log, callback } of logs) {
-      this.emit('logged', log.logId);
       delete this._logs[log.logId];
       callback();
     }
@@ -58,15 +61,24 @@ export class HttpLogger extends BaseLogger<LoggerHttpConfig> {
 
   //#region private
   private init(): void {
-    const { interval, logCount } = this._config.batch;
+    const { interval } = this._config.batch;
 
     setInterval(() => {
-      const logs = Object.values(this._logs);
-
-      if (logs.length >= logCount.min) {
-        this.sendLogs();
-      }
+      this.flush();
     }, interval);
+
+    threadList.addCleanup(async () => {
+      this.flush();
+    });
+  }
+
+  private flush(): void {
+    const { logCount } = this._config.batch;
+    const logs = Object.values(this._logs);
+
+    if (logs.length >= logCount.min) {
+      this.sendLogs();
+    }
   }
   //#endregion
 }

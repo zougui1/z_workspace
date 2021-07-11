@@ -4,20 +4,23 @@ import fs from 'fs-extra';
 import yaml from 'yaml';
 import moment from 'moment';
 
-import { extractErrors } from './extractErrors';
 import { BaseLogger } from '../BaseLogger';
 import { LoggerConfig, LoggerFileConfig } from '../../config';
 import { ILog } from '../../log';
+import { getLogFile, extractErrors } from '../../utils';
 
 export class FileLogger extends BaseLogger<LoggerFileConfig> {
 
+  private _fs: typeof fs = require('fs-extra');
   private readonly _stream: fs.WriteStream;
 
   constructor(fullConfig: LoggerConfig, config: LoggerFileConfig) {
     super('console', fullConfig, config);
 
-    fs.ensureDirSync(path.dirname(config.file));
-    this._stream = fs.createWriteStream(config.file);
+    const file = getLogFile(fullConfig) as string;
+
+    this._fs.ensureDirSync(path.dirname(file));
+    this._stream = this._fs.createWriteStream(file);
   }
 
   //#region logging
@@ -25,6 +28,14 @@ export class FileLogger extends BaseLogger<LoggerFileConfig> {
     return new Promise((resolve, reject) => {
       log.data = extractErrors(log.data);
       log.time.createdAt = moment(log.time.createdAt).format(log.time.format);
+
+      if (log.transaction?.time.startedAt) {
+        log.transaction.time.startedAt= moment(log.transaction.time.startedAt).format(log.time.format);
+      }
+      if (log.transaction?.time.finishedAt) {
+        log.transaction.time.finishedAt= moment(log.transaction.time.finishedAt).format(log.time.format);
+      }
+
       const written = this._stream.write(yaml.stringify(log));
 
       const cleanup = () => {

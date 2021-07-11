@@ -17,12 +17,18 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/find-package-json": "^1.2.1",
     "@types/jest": "^26.0.23",
+    "@zougui/jest-config": "^1.0.0",
     "dotenv": "^10.0.0",
     "jest": "^27.0.4"
   },
   "dependencies": {
+    "@zougui/utils": "^1.0.0",
     "env-var": "^7.0.1",
-    "moment": "^2.29.1"
+    "find-package-json": "^1.2.0",
+    "get-package-name": "^2.1.0",
+    "moment": "^2.29.1",
+    "stacktracey": "^2.1.7"
   }
 }

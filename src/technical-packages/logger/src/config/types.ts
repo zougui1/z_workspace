@@ -6,7 +6,7 @@ export type LoggerBaseConfig = {
 
 export type LoggerConsoleConfig = boolean | LoggerBaseConfig;
 
-export type LoggerFileConfig = {
+export type LoggerFileConfig = boolean | {
   file: string;
 } & LoggerBaseConfig;
 

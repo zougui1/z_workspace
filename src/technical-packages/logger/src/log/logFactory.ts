@@ -4,10 +4,12 @@ import * as uuid from 'uuid';
 import moment from 'moment';
 import _ from 'lodash';
 import StackTracey from 'stacktracey';
+import { PartialDeep } from 'type-fest';
 
 import env from '@zougui/env';
+import { TransactionContext } from '@zougui/transaction-context';
 
-import { ILog, ILogProfile, ILogContext, LogContext, IConstructedLog } from './types';
+import { ILog, ILogProfile, ILogContext, LogContext, IConstructedLog, ILogScope } from './types';
 import { LogKind, LogLevel } from '../enums';
 import { LoggerConfig } from '../config';
 
@@ -15,14 +17,18 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
   return class Log<TData extends T = T> implements IConstructedLog<TData> {
 
     readonly logKinds: LogKind[] = log.logKinds;
-    readonly config?: (context: LogContext<TData>) => LoggerConfig = log.config;
+    readonly config?: (context: LogContext<TData>) => PartialDeep<LoggerConfig> = log.config;
     readonly logId: string = uuid.v4();
     level?: LogLevel;
     readonly code: string = log.code;
-    readonly scope: string = log.scope;
+    readonly scope: ILogScope = log.scope;
     readonly topics: string[] = log.topics;
     readonly message: (context: LogContext<TData>) => string = log.message;
-    readonly profile?: ILogProfile = log.profile;
+    readonly transaction?: TransactionContext = log.transaction;
+    readonly profile?: {
+      label: (context: LogContext<T>) => string;
+      timing?: ILogProfile['timing'];
+    } = log.profile;
     readonly time: { createdAt: moment.Moment; format?: string } = { createdAt: moment() };
     readonly data: TData;
     readonly context: ILogContext;
@@ -31,14 +37,15 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
       this.data = data;
 
       const stackTraceLimit = Error.stackTraceLimit;
-      Error.stackTraceLimit = 3;
-      const stackFrame = new StackTracey(new Error().stack).at(2);
+      Error.stackTraceLimit = 2;
+      const stackFrame = new StackTracey(new Error().stack).at(1);
       Error.stackTraceLimit = stackTraceLimit;
 
       this.context = {
         app: {
           env: env.NODE_ENV,
-          name: env.PROJECT_NAME,
+          name: env.APP_NAME,
+          version: env.APP_VERSION,
           file: stackFrame.file,
           line: stackFrame.line,
           functionName: stackFrame.callee,
@@ -91,6 +98,7 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
       const context = {
         level: this.level || LogLevel.error,
         data: this.data,
+        transaction: this.transaction?.tryGetStore(),
         time,
         context: this.context,
       };
@@ -98,12 +106,17 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
       return context;
     }
 
-    getConfig(): LoggerConfig | undefined {
+    getConfig(): PartialDeep<LoggerConfig> | undefined {
       return this.config?.(this.getLogContext());
     }
 
     getLog(): ILog<TData> {
       const context = this.getLogContext();
+
+      const profile = this.profile && {
+        label: this.profile.label(context),
+        timing: this.profile.timing,
+      };
 
       return {
         logId: this.logId,
@@ -112,7 +125,8 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
         scope: this.scope,
         topics: this.topics,
         message: this.message(context),
-        profile: this.profile,
+        transaction: context.transaction,
+        profile,
         time: context.time,
         data: this.data,
         context: this.context,
@@ -123,10 +137,14 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
 
 export type LogPrototype<T extends Record<string, any>> = {
   logKinds: LogKind[];
-  config?: (context: LogContext<T>) => LoggerConfig;
+  config?: (context: LogContext<T>) => PartialDeep<LoggerConfig>;
   code: string;
-  scope: string;
+  scope: ILogScope;
   topics: string[];
   message: (context: LogContext<T>) => string;
-  profile?: ILogProfile;
+  transaction?: TransactionContext;
+  profile?: {
+    label: (context: LogContext<T>) => string;
+    timing?: ILogProfile['timing'];
+  };
 }

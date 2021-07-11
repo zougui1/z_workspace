@@ -1,11 +1,8 @@
 import Discord from 'discord.js';
 import { ObjectSchema } from 'joi';
-import moment from 'moment';
-import { logger, List, ExitScope } from '@zougui/logger';
-import { Exception } from '@zougui/error';
 
 import { extractCode } from './format';
-import { getChannelLocationMessage } from '../channel';
+import { InvalidJsonMessageError } from './errors';
 
 export const parseJsonMessage = (message: Discord.Message, options: ParseJsonMessageOptions = {}) => {
   const dirtyJson = JSON.parse(extractCode(message.content, 'json'));
@@ -21,20 +18,24 @@ const validateConfig = (config: unknown, schema: ObjectSchema, message: Discord.
   const validation = schema.validate(config, { abortEarly: false });
 
   if (validation.error) {
-    const messages = validation.error.details.map(detail => detail.message);
-    logger.error(new Exception(getErrorMessage(message), 'ERR_INVALID_JSON_MESSAGE', new List('', messages)));
-    throw new ExitScope('config-validate', validation.error);
+    const channelServer = message.channel as Partial<Discord.TextChannel>;
+    const channelDm = message.channel as Partial<Discord.DMChannel>;
+
+    throw new InvalidJsonMessageError({
+      validation,
+      message: {
+        content: message.content,
+        createdAt: message.createdAt,
+        updatedAt: message.editedAt,
+        author: message.author.username,
+        channel: channelServer.name,
+        dm: channelDm.recipient?.username,
+        server: message.guild?.name,
+      }
+    });
   }
 
   return validation.value;
-}
-
-const getErrorMessage = (message: Discord.Message): string => {
-  const createdAt = moment(message.createdAt);
-  const sentAt = `sent on ${createdAt.format('LL')} at ${createdAt.format('LT')}`;
-  const errorMessage = `Invalid JSON message ${sentAt} ${getChannelLocationMessage(message.channel)}`;
-
-  return errorMessage;
 }
 
 

@@ -1,0 +1,491 @@
+logId: bf5fe8dd-f4f0-4041-a852-5f45d97e7a74
+level: warn
+code: backup.inputs.optional.missing
+scope: "@zougui/create-computer-backup"
+topics:
+  - backup
+message: |-
+  The following optional inputs do not exist:
+    /run/media/zougui/Password_Manager
+profile: null
+time:
+  createdAt: 2021-07-03 07:44:13.555 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  backups:
+    - label: Password_Manager
+      inputs:
+        - /run/media/zougui/Password_Manager
+      required: null
+      excludes:
+        - .pnpm-store
+        - .Trash-1000
+        - lost+found
+        - node_modules
+        - dist
+        - lib
+        - coverage
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/cli/create-computer-backup/src/commands/create/createBackup.ts
+    line: 26
+    functionName: getBackups
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: 451e2b10-ff65-48e4-9ad3-2457b14505fc
+level: info
+code: backup.create.start
+scope: "@zougui/create-computer-backup"
+topics:
+  - backup
+message: Start making backup of "Manjaro_OS/system"
+profile: null
+time:
+  createdAt: 2021-07-03 07:44:13.577 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  backup:
+    label: Manjaro_OS/system
+    inputs:
+      - /etc
+      - /root
+      - /var
+    required: true
+    excludes:
+      - .pnpm-store
+      - .Trash-1000
+      - lost+found
+      - node_modules
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/cli/create-computer-backup/src/commands/create/createBackup.ts
+    line: 81
+    functionName: Object.createBackup
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: fa899dc3-c026-4965-9d1a-985cfa5c7325
+level: info
+code: backup.inputs.copy.start
+scope: "@zougui/create-computer-backup"
+topics:
+  - backup
+  - copy
+message: Copying "/etc"...
+profile: null
+time:
+  createdAt: 2021-07-03 07:44:13.580 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  backup:
+    label: Manjaro_OS/system
+    inputs:
+      - /etc
+      - /root
+      - /var
+    required: true
+    excludes:
+      - .pnpm-store
+      - .Trash-1000
+      - lost+found
+      - node_modules
+  input: /etc
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/cli/create-computer-backup/src/commands/create/createBackup.ts
+    line: 45
+    functionName: makeBackups
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: 80164eb6-040a-44fc-9d19-f4d506732407
+level: error
+code: backup.error
+scope: "@zougui/create-computer-backup"
+topics:
+  - backup
+message: |-
+  An error occured while trying to back-up:
+  logger_1.ProfileLog is not a constructor
+profile: null
+time:
+  createdAt: 2021-07-03 07:44:13.586 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  error:
+    name: TypeError
+    message: logger_1.ProfileLog is not a constructor
+    stack: >-
+      TypeError: logger_1.ProfileLog is not a constructor
+          at BashCommand.exec (/mnt/Dev/Code/javascript/zougui/src/technical-packages/bash/src/BashCommand.ts:97:17)
+          at Object.copy (/mnt/Dev/Code/javascript/zougui/src/cli/create-computer-backup/src/commands/create/makeBackup.ts:45:15)
+          at Object.makeBackup (/mnt/Dev/Code/javascript/zougui/src/cli/create-computer-backup/src/commands/create/makeBackup.ts:20:5)
+          at makeBackups (/mnt/Dev/Code/javascript/zougui/src/cli/create-computer-backup/src/commands/create/createBackup.ts:45:5)
+          at Object.createBackup (/mnt/Dev/Code/javascript/zougui/src/cli/create-computer-backup/src/commands/create/createBackup.ts:81:19)
+          at Command.<anonymous> (/mnt/Dev/Code/javascript/zougui/src/cli/create-computer-backup/src/index.ts:27:7)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: <???>
+    line: 0
+    functionName: <???>
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: 80836dfc-d841-4267-82ad-649be4425d8c
+level: warn
+code: process.exit.forced
+scope: "@zougui/thread-manager"
+topics:
+  - process
+  - exit
+  - force
+message: Forced to exit while 2 threads were still running.
+profile: null
+time:
+  createdAt: 2021-07-03 07:44:14.593 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  signal: UNKNOWN
+  code: 0
+  threads:
+    - Log to email (warn)
+    - Log to email (error)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/technical-packages/thread-manager/src/threadManager.ts
+    line: 65
+    functionName: Timeout._onTimeout
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: 5795f7f7-0b2c-4c0d-a734-69ac2f6e231d
+level: warn
+code: process.exit.prevented
+scope: "@zougui/thread-manager"
+topics:
+  - process
+  - exit
+  - prevented
+message: Couldn't exit the process, 3 threads were still running.
+profile: null
+time:
+  createdAt: 2021-07-03 07:45:43.720 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  signal: SIGINT
+  code: 0
+  threads:
+    - Log to email (warn)
+    - Log to email (error)
+    - Log to email (warn)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/technical-packages/thread-manager/src/threadManager.ts
+    line: 93
+    functionName: ""
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: cac760cb-717e-4673-9d28-dfcf7540c545
+level: warn
+code: process.exit.prevented
+scope: "@zougui/thread-manager"
+topics:
+  - process
+  - exit
+  - prevented
+message: Couldn't exit the process, 4 threads were still running.
+profile: null
+time:
+  createdAt: 2021-07-03 07:45:43.725 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  signal: SIGINT
+  code: 0
+  threads:
+    - Log to email (warn)
+    - Log to email (error)
+    - Log to email (warn)
+    - Log to email (warn)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/technical-packages/thread-manager/src/threadManager.ts
+    line: 93
+    functionName: ""
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: f7f0f9c2-6b7e-4cb4-89ae-2bf6dd44cd68
+level: warn
+code: process.exit.prevented
+scope: "@zougui/thread-manager"
+topics:
+  - process
+  - exit
+  - prevented
+message: Couldn't exit the process, 5 threads were still running.
+profile: null
+time:
+  createdAt: 2021-07-03 07:45:43.875 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  signal: SIGINT
+  code: 0
+  threads:
+    - Log to email (warn)
+    - Log to email (error)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/technical-packages/thread-manager/src/threadManager.ts
+    line: 93
+    functionName: ""
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: 58a70a96-7190-4004-a2cd-1d06962d62a2
+level: warn
+code: process.exit.prevented
+scope: "@zougui/thread-manager"
+topics:
+  - process
+  - exit
+  - prevented
+message: Couldn't exit the process, 6 threads were still running.
+profile: null
+time:
+  createdAt: 2021-07-03 07:45:43.879 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  signal: SIGINT
+  code: 0
+  threads:
+    - Log to email (warn)
+    - Log to email (error)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/technical-packages/thread-manager/src/threadManager.ts
+    line: 93
+    functionName: ""
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: 1bcc45e4-eaba-412a-b24b-c3c4f7fc8175
+level: warn
+code: process.exit.prevented
+scope: "@zougui/thread-manager"
+topics:
+  - process
+  - exit
+  - prevented
+message: Couldn't exit the process, 7 threads were still running.
+profile: null
+time:
+  createdAt: 2021-07-03 07:45:44.014 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  signal: SIGINT
+  code: 0
+  threads:
+    - Log to email (warn)
+    - Log to email (error)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/technical-packages/thread-manager/src/threadManager.ts
+    line: 93
+    functionName: ""
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: 61244dfe-f9ab-4539-bd27-b05bb7c2d68b
+level: warn
+code: process.exit.prevented
+scope: "@zougui/thread-manager"
+topics:
+  - process
+  - exit
+  - prevented
+message: Couldn't exit the process, 8 threads were still running.
+profile: null
+time:
+  createdAt: 2021-07-03 07:45:44.019 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  signal: SIGINT
+  code: 0
+  threads:
+    - Log to email (warn)
+    - Log to email (error)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/technical-packages/thread-manager/src/threadManager.ts
+    line: 93
+    functionName: ""
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: 52726df6-d44d-4589-8591-5f3ecb5b7025
+level: warn
+code: process.exit.prevented
+scope: "@zougui/thread-manager"
+topics:
+  - process
+  - exit
+  - prevented
+message: Couldn't exit the process, 9 threads were still running.
+profile: null
+time:
+  createdAt: 2021-07-03 07:45:44.142 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  signal: SIGINT
+  code: 0
+  threads:
+    - Log to email (warn)
+    - Log to email (error)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/technical-packages/thread-manager/src/threadManager.ts
+    line: 93
+    functionName: ""
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui
+logId: 9704f344-1706-43f4-b1b4-94491652ac49
+level: warn
+code: process.exit.prevented
+scope: "@zougui/thread-manager"
+topics:
+  - process
+  - exit
+  - prevented
+message: Couldn't exit the process, 10 threads were still running.
+profile: null
+time:
+  createdAt: 2021-07-03 07:45:44.146 PM
+  format: YYYY-MM-DD hh:mm:ss.SSS A
+data:
+  signal: SIGINT
+  code: 0
+  threads:
+    - Log to email (warn)
+    - Log to email (error)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+    - Log to email (warn)
+context:
+  app:
+    env: development
+    name: computer-backup
+    file: /mnt/Dev/Code/javascript/zougui/src/technical-packages/thread-manager/src/threadManager.ts
+    line: 93
+    functionName: ""
+    nodeVersion: v15.14.0
+  os:
+    platform: linux
+    version: 5.10.41-1-MANJARO
+  process:
+    processId: 199540
+    user: zougui

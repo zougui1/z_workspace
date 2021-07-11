@@ -17,9 +17,13 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
+    "@zougui/jest-config": "^1.0.0",
     "jest": "^27.0.4"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@zougui/utils": "^1.0.0"
+  }
 }

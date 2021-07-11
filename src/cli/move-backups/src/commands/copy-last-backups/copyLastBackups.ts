@@ -1,8 +1,8 @@
 import path from 'path';
-import moment from 'moment';
+
 import { logger } from '@zougui/logger';
-import { Exception } from '@zougui/error';
 import { areAvailableOrFail } from '@zougui/bash';
+import { transactionContext } from '@zougui/transaction-context';
 
 import { findLastBackups } from './findLastBackups';
 import { copyBackupToPartition } from './copyBackupToPartition';
@@ -16,23 +16,14 @@ import {
   UnmountErrorLog,
   PowerOffErrorLog,
 } from './logs';
+import { UnmountPartitionErrorData } from './errors';
 import { getBackupConfig } from '../../backup-config';
 import { watchForExternalBackupPartitions } from '../../watcher';
 import { getDevicePath, unmount, powerOffDrive } from '../../drive';
 
 export const copyLastBackups = async () => {
   const config = await getBackupConfig();
-  const backupDate = moment();
-  logger.init({
-    ...config.logs.transports,
-    file: {
-      ...config.logs.transports.file,
-      fileName: path.join(config.logs.transports.file.dir, `${backupDate.format(config.backupDirFormat)}.yml`),
-    },
-  }, {
-    dateFormat: config.dateFormat,
-    metadata: { backupDate },
-  });
+  logger.init(config.logs);
 
   await areAvailableOrFail(requiredCopyBackupCommands)
   const drives: Record<string, TempDrive> = {};
@@ -52,42 +43,54 @@ export const copyLastBackups = async () => {
   }
 
   watchForExternalBackupPartitions(async (mountPoint, fsEntry) => {
-    const label = `Backup partition "${mountPoint}"`;
-    drives[mountPoint] = {
-      label,
-      mountPoint,
-      devPath: getDevicePath(fsEntry.fileSystem.type, fsEntry.fileSystem.id),
-      mounted: true,
+    const transaction = {
+      label: 'Create a computer backup',
+      topics: ['backup', 'filesystem'],
+      data: {
+        mountPoint,
+        fsEntry,
+      },
+      context: {},
     };
 
-    logger.info(new LookingForLastBackupsLog({}));
-    const lastBackupsPaths = await findLastBackups(config);
+    await transactionContext.run(transaction, async () => {
+      const label = `Backup partition "${mountPoint}"`;
+      drives[mountPoint] = {
+        label,
+        mountPoint,
+        devPath: getDevicePath(fsEntry.fileSystem.type, fsEntry.fileSystem.id),
+        mounted: true,
+      };
 
-    if (lastBackupsPaths.length) {
-      logger.info(new LastBackupsFoundLog({ backupsPath: lastBackupsPaths }));
+      logger.info(new LookingForLastBackupsLog({}));
+      const lastBackupsPaths = await findLastBackups(config);
 
-      for (const lastBackupPath of lastBackupsPaths) {
-        const dest = path.join(mountPoint, 'backups');
+      if (lastBackupsPaths.length) {
+        logger.info(new LastBackupsFoundLog({ backupsPath: lastBackupsPaths }));
 
-        logger.info(new CopyBackupLog({ partitionMountPoint: mountPoint, backupPath: lastBackupPath}));
-        await copyBackupToPartition(lastBackupPath, dest);
-        logger.info(new CopiedBackupLog({ partitionMountPoint: mountPoint, backupPath: lastBackupPath}));
+        for (const lastBackupPath of lastBackupsPaths) {
+          const dest = path.join(mountPoint, 'backups');
+
+          logger.info(new CopyBackupLog({ partitionMountPoint: mountPoint, backupPath: lastBackupPath}));
+          await copyBackupToPartition(lastBackupPath, dest);
+          logger.info(new CopiedBackupLog({ partitionMountPoint: mountPoint, backupPath: lastBackupPath}));
+        }
+      } else {
+        logger.info(new NoLastBackupsLog({}));
       }
-    } else {
-      logger.info(new NoLastBackupsLog({}));
-    }
 
-    try {
-      await unmount(mountPoint);
-    } catch (error) {
-      const exception = new Exception(`Could not unmount the partition "${fsEntry.fileSystem.id}".`, 'ERR_UNMOUNT_PARTITION', error);
-      const unmountErrorLog = new UnmountErrorLog({ fsEntry, error: exception });
-      logger.error(unmountErrorLog);
-      return;
-    }
+      try {
+        await unmount(mountPoint);
+      } catch (error) {
+        const exception = new UnmountPartitionErrorData({ entry: fsEntry, error });
+        const unmountErrorLog = new UnmountErrorLog({ fsEntry, error: exception });
+        logger.error(unmountErrorLog);
+        return;
+      }
 
-    drives[mountPoint].mounted = false;
-    await tryPowerOff();
+      drives[mountPoint].mounted = false;
+      await tryPowerOff();
+    });
   });
 }
 

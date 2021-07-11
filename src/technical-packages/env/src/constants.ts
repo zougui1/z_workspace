@@ -1,5 +1,13 @@
 import path from 'path';
 
-export const ROOT = require.main?.filename
+const mainFile = require.main?.filename
   ? path.dirname(path.dirname(require.main.filename))
+  : '';
+
+export const ROOT = mainFile
+  ? mainFile.includes('node_modules')
+    ? mainFile.replace(/\/node_modules\/.*/, '')
+    : mainFile
   : process.cwd();
+
+export const WORKSPACE_ROOT_PATH = path.join(__dirname, '../../../..');

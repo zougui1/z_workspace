@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 
 import _ from 'lodash';
+import { PartialDeep } from 'type-fest';
 
 import { threadList } from '@zougui/thread-list';
 
@@ -26,7 +27,7 @@ export abstract class BaseLogger<TConf extends (boolean | LoggerBaseConfig)> ext
   }
 
   //#region logging
-  async log(log: ILog, logConfig?: LoggerConfig): Promise<void> {
+  async log(log: ILog, logConfig?: PartialDeep<LoggerConfig>): Promise<void> {
     if(!this.canLog(log.level)) {
       return;
     }
@@ -37,7 +38,7 @@ export abstract class BaseLogger<TConf extends (boolean | LoggerBaseConfig)> ext
     await this.print(_.cloneDeep(log), logConfig);
   }
 
-  protected abstract print(log: ILog, logConfig?: LoggerConfig): Promise<void>;
+  protected abstract print(log: ILog, logConfig?: PartialDeep<LoggerConfig>): Promise<void>;
   //#endregion
 
   //#region helpers

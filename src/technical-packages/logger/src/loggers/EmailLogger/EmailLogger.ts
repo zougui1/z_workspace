@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer';
 import moment from 'moment';
 
+import { threadList } from '@zougui/thread-list';
+
 import { formatEmail } from './formatEmail';
 import { BaseLogger } from '../BaseLogger';
 import { LoggerConfig, LoggerEmailConfig } from '../../config';
@@ -8,13 +10,14 @@ import { ILog } from '../../log';
 
 export class EmailLogger extends BaseLogger<LoggerEmailConfig> {
 
+  private _nodemailer: typeof nodemailer = require('nodemailer');
   private _email: nodemailer.Transporter<nodemailer.SentMessageInfo>;
   private _logs: Record<string, { log: ILog; callback: (err?: any) => void }> = {};
 
   constructor(fullConfig: LoggerConfig, config: LoggerEmailConfig) {
     super('email', fullConfig, config);
 
-    this._email = nodemailer.createTransport({
+    this._email = this._nodemailer.createTransport({
       service: config.service,
       auth: {
         user: config.user,
@@ -27,6 +30,7 @@ export class EmailLogger extends BaseLogger<LoggerEmailConfig> {
   //#region logging
   protected async print(log: ILog): Promise<void> {
     log.time.createdAt = moment(log.time.createdAt).format(log.time.format);
+    this.emit('logged', log.logId);
 
     return new Promise<void>((resolve, reject) => {
       this._logs[log.logId] = {
@@ -65,13 +69,13 @@ export class EmailLogger extends BaseLogger<LoggerEmailConfig> {
         });
       });
     } catch (error) {
-      for (const { callback } of logs) {
+      for (const { log, callback } of logs) {
+        delete this._logs[log.logId];
         callback(error);
       }
     }
 
     for (const { log, callback } of logs) {
-      this.emit('logged', log.logId);
       delete this._logs[log.logId];
       callback();
     }
@@ -80,15 +84,24 @@ export class EmailLogger extends BaseLogger<LoggerEmailConfig> {
 
   //#region private
   private init(): void {
-    const { interval, logCount } = this._config.batch;
+    const { interval } = this._config.batch;
 
     setInterval(() => {
-      const logs = Object.values(this._logs);
-
-      if (logs.length >= logCount.min) {
-        this.sendLogs();
-      }
+      this.flush();
     }, interval);
+
+    threadList.addCleanup(async () => {
+      this.flush();
+    });
+  }
+
+  private flush(): void {
+    const { logCount } = this._config.batch;
+    const logs = Object.values(this._logs);
+
+    if (logs.length >= logCount.min) {
+      this.sendLogs();
+    }
   }
   //#endregion
 }

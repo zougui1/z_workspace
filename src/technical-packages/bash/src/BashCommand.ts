@@ -2,12 +2,14 @@ import shellEscape from 'shell-escape';
 import { SpawnOptionsWithoutStdio } from 'child_process';
 import commandExists from 'command-exists';
 import { execSpawn, toArray } from '@zougui/utils';
-import { logger, logExecuting, logExecuted, ExitScope, ProfileLog, LogKind } from '@zougui/logger';
+import { logger } from '@zougui/logger';
 
 import { ICommand } from './ICommand';
 import { BashEnvVar } from './BashEnvVar';
 import { BashStdout } from './BashStdout';
 import { BashSubCommand } from './BashSubCommand';
+import { MissingCommandError } from './errors';
+import { MissingCommandLog, ExecutingCommandLog, ExecutedCommandLog, ICommand as ICommandJson } from './logs';
 
 const reLastHash = /#$/;
 const reMergeCommandSwitches = /(-[a-z+]) +-([a-z]+)/gi;
@@ -76,8 +78,12 @@ export class BashCommand<TArgs extends Record<string, any> & ICommandOptions, TR
     try {
       await commandExists(this.name);
     } catch (error) {
-      logger.error(`The command ${this.name} is required and must be installed.`);
-      throw new ExitScope('missing-command', error);
+      const exception = new MissingCommandError({ error });
+      logger.error(new MissingCommandLog({
+        error,
+        command: this.toJson(),
+      }));
+      throw exception;
     }
   }
 
@@ -94,14 +100,9 @@ export class BashCommand<TArgs extends Record<string, any> & ICommandOptions, TR
   async exec(): Promise<TResult> {
     const command = this.toString();
 
-    const log = new ProfileLog(command, {})
-      .setMessage(LogKind.file, this.toString(undefined, { indent: true }))
-      .setMessage(this.toString(undefined, { aliases: true, indent: true }));
-
-
-    logExecuting(log);
+    logger.info(new ExecutingCommandLog({ command: this.toJson() }));
     const output = await execSpawn(command, this._options?.exec) as string;
-    logExecuted(log);
+    logger.info(new ExecutedCommandLog({ command: this.toJson() }));
 
     return this._parseOutput ? this._parseOutput(output) : output as any;
   }
@@ -123,6 +124,16 @@ export class BashCommand<TArgs extends Record<string, any> & ICommandOptions, TR
   //#endregion
 
   //#region private
+  toJson(): ICommandJson {
+    return {
+      name: this.name,
+      description: this.description,
+      options: this._options,
+      args: this.args,
+      aliases: this.aliases,
+    };
+  }
+
   private sanitizeValue(value: any, options: StringifyArgsOptions = {}): string {
     if (value instanceof BashEnvVar) {
       return value.toEnvName();

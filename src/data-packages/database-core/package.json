@@ -19,6 +19,7 @@
     "@types/jest": "^26.0.23",
     "@types/lodash": "^4.14.170",
     "@types/pluralize": "^0.0.29",
+    "@zougui/jest-config": "^1.0.0",
     "jest": "^27.0.4",
     "source-map-support": "^0.5.19",
     "ts-node": "^10.0.0",

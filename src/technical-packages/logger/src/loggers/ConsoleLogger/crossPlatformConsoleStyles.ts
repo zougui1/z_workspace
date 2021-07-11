@@ -18,13 +18,13 @@ export const crossPlatformConsoleStyles = (inputs: Input[]): { message: string; 
       const styles: ((message: string) => string)[] = input.styles
         ? Object.entries(input.styles).map(([name, value]) => {
           const styler = typeof (chalk as any)[name] === 'function'
-            ? (chalk as any)[name]
-            : chalk.hex
+            ? (chalk as any)[name].bind(chalk)
+            : chalk.hex.bind(chalk)
 
 
-          return value === true
-            ? styler
-            : styler(value)
+          return typeof value === 'string'
+            ? styler(value)
+            : styler
         })
         : [];
 

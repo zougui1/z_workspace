@@ -1,8 +1,4 @@
-import { IRawLogsConfig, ILogsConfig } from '@zougui/logger';
-
-interface ISimpleBackup {
-  input: string;
-}
+import { LoggerConfig } from '@zougui/logger';
 
 interface IComposedBackup {
   inputs: string[];
@@ -14,7 +10,6 @@ interface IBaseBackup {
   excludes?: string[];
 }
 
-export type RawBackup = IBaseBackup & (ISimpleBackup | IComposedBackup);
 export type Backup = IBaseBackup & IComposedBackup;
 
 export interface IRawReason {
@@ -41,18 +36,6 @@ interface IBaseBackupConfig {
   externalBackupPartitions: IExternalBackupPartition[];
 }
 
-export interface IRawFilesystemBackupConfig {
-  excludes?: string[];
-  reasons: {
-    manual: IRawReason;
-    boot: IRawReason;
-    packageInstall: IRawReason;
-    packageUpgrade: IRawReason;
-    packageRemove: IRawReason;
-  };
-  backups: RawBackup[];
-}
-
 export interface IFilesystemBackupConfig {
   excludes?: string[];
   reasons: {
@@ -69,12 +52,7 @@ export interface IDiscordBackupConfig {
   prefix: string;
 }
 
-export interface IRawBackupConfig extends IBaseBackupConfig {
-  logs: IRawLogsConfig;
-  filesystem: IRawFilesystemBackupConfig;
-}
-
 export interface IBackupConfig extends IBaseBackupConfig {
-  logs: ILogsConfig;
+  logs: LoggerConfig;
   filesystem: IFilesystemBackupConfig;
 }

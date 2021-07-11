@@ -1,12 +1,13 @@
-import { IBackupConfig } from '../../backup-config';
-import { Reasons } from './Reasons';
-import { getUpdatedPackageNames } from '../../package-manager';
+import { pacman } from '@zougui/package-manager';
+import { computerBackupMachine } from '@zougui/computer-backup-workflow';
 
-export const getBackupCause = async (config: IBackupConfig, reason: Reasons): Promise<string[] | undefined> => {
+import { IBackupConfig } from '../../backup-config';
+
+export const getBackupCause = async (config: IBackupConfig, reason: computerBackupMachine.Reasons): Promise<string[] | undefined> => {
   switch (reason) {
-    case Reasons.packageInstall:
-    case Reasons.packageUpgrade:
-    case Reasons.packageRemove:
-      return await getUpdatedPackageNames({ timeout: config.packagesStdinTimeout });
+    case computerBackupMachine.Reasons.packageInstall:
+    case computerBackupMachine.Reasons.packageUpgrade:
+    case computerBackupMachine.Reasons.packageRemove:
+      return await pacman.getUpdatedPackageNames({ timeout: config.packagesStdinTimeout });
   }
 }

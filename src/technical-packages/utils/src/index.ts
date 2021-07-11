@@ -4,3 +4,4 @@ export * from './process';
 export * from './timers';
 export * from './string';
 export * from './function';
+export * from './object';

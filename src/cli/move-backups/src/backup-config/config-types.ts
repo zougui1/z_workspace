@@ -1,4 +1,4 @@
-import { IRawLogsConfig, ILogsConfig } from '@zougui/logger';
+import { LoggerConfig } from '@zougui/logger';
 
 export interface IBaseConfig {
   dateFormat: string;
@@ -7,10 +7,6 @@ export interface IBaseConfig {
   externalBackupPartitions: string[];
 }
 
-export interface IRawConfig extends IBaseConfig {
-  logs: IRawLogsConfig;
-}
-
 export interface IConfig extends IBaseConfig {
-  logs: ILogsConfig;
+  logs: LoggerConfig;
 }

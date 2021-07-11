@@ -4,6 +4,7 @@
   "scripts": {
     "compile": "lerna run compile",
     "compile:watch": "lerna run --parallel compile:watch",
+    "start:server": "lerna run --parallel start:server",
     "test": "lerna run test"
   },
   "devDependencies": {

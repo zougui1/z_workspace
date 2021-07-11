@@ -1,16 +1,18 @@
-import { Log } from '@zougui/logger';
+import { LogBuilder } from '@zougui/logger';
+import env from '@zougui/env';
 
-import { Post } from './Post';
+const scope = env.getScope(__filename);
 
 export interface FilteredPostsLogData {
   posts: {
-    data: Post;
+    url: string;
     filters: { includes?: string[]; excludes?: string[]; }[]
   }[];
 }
 
-export const FilteredPostsLog = new Log<FilteredPostsLogData>()
+export const FilteredPostsLog = new LogBuilder<FilteredPostsLogData>()
   .setCode('e621.posts.filtered')
+  .setScope(scope)
   .setTopics(['e621', 'posts'])
   .setMessage(({ data }) => `${data.posts.length} have been filtered out.`)
   .toClass();

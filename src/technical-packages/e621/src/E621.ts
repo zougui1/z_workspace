@@ -65,12 +65,12 @@ export class E621 {
         const filters = when.filter(when => !this.takeWhen(post, when));
 
         return {
-          data: post,
+          url: post.url,
           filters,
         };
       });
 
-      logger.info(new FilteredPostsLog({ posts: postsWithFilters }));
+      logger.info(new FilteredPostsLog({ posts: JSON.parse(JSON.stringify(postsWithFilters)) }));
     }
 
     return filteredPosts;

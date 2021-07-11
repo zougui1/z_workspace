@@ -16,10 +16,12 @@
   "dependencies": {
     "@types/jest": "^26.0.23",
     "@zougui/bash": "^1.0.0",
+    "@zougui/env": "^1.0.0",
     "@zougui/error": "^1.0.0",
     "@zougui/logger": "^1.0.0",
     "@zougui/permissions": "^1.0.0",
     "@zougui/thread-manager": "^1.0.0",
+    "@zougui/transaction-context": "^1.0.0",
     "@zougui/user-config-file": "^1.0.0",
     "@zougui/utils": "^1.0.0",
     "commander": "^7.2.0",
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@types/fs-extra": "^9.0.6",
     "@types/lodash": "^4.14.170",
+    "@zougui/jest-config": "^1.0.0",
     "source-map-support": "^0.5.19",
     "typescript": "^4.1.3"
   },

@@ -18,6 +18,7 @@ export interface RsyncArgs {
 }
 
 export enum RsyncInfo {
+  none = 'none',
   progress = 'progress',
   progress2 = 'progress2',
 }

@@ -1,3 +1,5 @@
+import { toFunction } from '@zougui/utils';
+
 export interface IConstructedError<TData extends Record<string, any> = any> extends Error {
   data: TData;
   status?: number;
@@ -23,12 +25,12 @@ export class PartialException<T extends Record<string, any> = any> extends Error
 
 export class Exception<T extends Record<string, any> = any> {
 
-  public message?: string;
+  public message?: (data: T) => string;
   public code?: string;
   public status?: number;
 
-  setMessage(message: string): this {
-    this.message = message;
+  setMessage(message: string | ((data: T) => string)): this {
+    this.message = toFunction(message);
     return this;
   }
 
@@ -61,7 +63,7 @@ export class Exception<T extends Record<string, any> = any> {
 
       constructor(data: TData) {
         super({
-          message: message || 'No message provided',
+          message: message?.(data) || 'No message provided',
           code: actualCode,
           status,
           data,

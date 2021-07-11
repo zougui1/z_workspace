@@ -1,4 +1,4 @@
-import { Context, Get, HttpResponseOK, IAppController, controller, ApiInfo, ApiServer } from '@foal/core';
+import { IAppController, controller, ApiInfo, ApiServer } from '@foal/core';
 
 import { LogController } from './log';
 
@@ -13,10 +13,4 @@ export class V1Controller implements IAppController {
   subControllers = [
     controller('/logs', LogController),
   ];
-
-  @Get('/')
-  index(ctx: Context) {
-    return new HttpResponseOK('Hello world!');
-  }
-
 }

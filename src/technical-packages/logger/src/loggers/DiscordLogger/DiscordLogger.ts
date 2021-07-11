@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
 import moment from 'moment';
+import { PartialDeep } from 'type-fest';
 
 import { threadList } from '@zougui/thread-list';
 
@@ -8,6 +9,7 @@ import { BaseLogger } from '../BaseLogger';
 import { LoggerConfig, LoggerDiscordConfig } from '../../config';
 import { ILog } from '../../log';
 import { LogColor } from '../../enums';
+import { getLogFile } from '../../utils';
 
 export class DiscordLogger extends BaseLogger<LoggerDiscordConfig> {
 
@@ -16,9 +18,12 @@ export class DiscordLogger extends BaseLogger<LoggerDiscordConfig> {
   private _ready: boolean = false;
   private _logsServer?: Discord.Guild;
   private _logsChannel?: Discord.TextChannel;
+  private _logFile: string | undefined;
 
   constructor(fullConfig: LoggerConfig, config: LoggerDiscordConfig) {
     super('discord', fullConfig, config);
+
+    this._logFile = getLogFile(fullConfig);
 
     this.init();
     this._client.login(config.token);
@@ -37,13 +42,13 @@ export class DiscordLogger extends BaseLogger<LoggerDiscordConfig> {
   //#endregion
 
   //#region helpers
-  protected async send(message: Discord.MessageEmbed, log: ILog, logConfig?: LoggerConfig): Promise<void> {
+  protected async send(message: Discord.MessageEmbed, log: ILog, logConfig?: PartialDeep<LoggerConfig>): Promise<void> {
     const options = logConfig?.discord;
 
     const logServer = this._client.guilds.cache.find(server => server.name === options?.server);
     const categories = logServer?.channels.cache.filter(channel => channel.type === 'category').array() as Discord.CategoryChannel[];
 
-    const logCategory = categories.find(channel => channel.name === options?.category);
+    const logCategory = categories?.find(channel => channel.name === options?.category);
 
     const channels = logCategory
       ? logCategory.children.filter(channel => channel.type === 'text').array() as Discord.TextChannel[]
@@ -76,8 +81,8 @@ export class DiscordLogger extends BaseLogger<LoggerDiscordConfig> {
       .addField('Logged at:', moment(log.time.createdAt).format(log.time.format))
       .setTimestamp();
 
-    if (this._fullConfig.file?.file) {
-      embed.addField('For more details see:', this._fullConfig.file.file);
+    if (this._logFile) {
+      embed.addField('For more details see:', this._logFile);
     }
 
     return embed;

@@ -4,7 +4,8 @@ import Joi from 'joi';
 const logContextAppSchema = Joi.object({
   env: Joi.string().default('development'),
   name: Joi.string().min(3).required(),
-  file: Joi.string().required(),
+  version: Joi.string().min(3).required(),
+  file: Joi.string().allow('').required(),
   line: Joi.number().positive().integer().min(1),
   functionName: Joi.string().required(),
   nodeVersion: Joi.string().required(),
@@ -41,12 +42,33 @@ const logProfile = Joi.object({
   }),
 });
 
+const scopeSchema = Joi.object({
+  name: Joi.string().required(),
+  version: Joi.string().required(),
+});
+
+//#region log transaction
+const transactionTimeSchema = Joi.object({
+  startedAt: Joi.date().required(),
+  finishedAt: Joi.date(),
+});
+
+const transactionSchema = Joi.object({
+  id: Joi.string().required(),
+  topics: Joi.array().items(Joi.string()).required(),
+  data: Joi.object().required(),
+  time: transactionTimeSchema.required(),
+});
+//#endregion
+
 export const logSchema = Joi.object({
   logId: Joi.string().required(),
   level: Joi.string().min(3).required(),
   code: Joi.string().min(3).required(),
+  scope: scopeSchema.required(),
   profile: logProfile,
   message: Joi.string().required(),
+  transaction: transactionSchema,
   topics: Joi.array().items(Joi.string()).required(),
   time: logTimeSchema.required(),
   data: Joi.object().required(),

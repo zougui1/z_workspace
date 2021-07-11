@@ -17,11 +17,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@zougui/env": "^1.0.0",
     "@zougui/logger": "^1.0.0",
     "@zougui/thread-list": "^1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
+    "@zougui/jest-config": "^1.0.0",
     "jest": "^27.0.4"
   }
 }

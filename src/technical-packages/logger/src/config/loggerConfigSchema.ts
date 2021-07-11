@@ -21,10 +21,13 @@ const loggerConsoleConfigSchema = Joi.alternatives().try(
   Joi.object(loggerBaseConfig),
 );
 
-const loggerFileConfigSchema = Joi.object({
-  ...loggerBaseConfig,
-  file: Joi.string().required(),
-});
+const loggerFileConfigSchema = Joi.alternatives().try(
+  Joi.boolean(),
+  Joi.object({
+    ...loggerBaseConfig,
+    file: Joi.string().required(),
+  }),
+);
 
 const loggerDatabaseConfigSchema = Joi.object({
   ...loggerBaseConfig,

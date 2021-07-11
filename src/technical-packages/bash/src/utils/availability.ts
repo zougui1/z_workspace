@@ -1,7 +1,9 @@
 import commandExists from 'command-exists';
-import { logger, List, ExitScope } from '@zougui/logger';
+import { logger } from '@zougui/logger';
 
 import { BashCommand } from '../BashCommand';
+import { MissingManyCommandsError } from '../errors';
+import { MissingManyCommandsLog } from '../logs';
 
 export const areAvailableOrFail = async (commands: (string | BashCommand<any>)[]): Promise<void> => {
   const availables = await Promise.all(commands.map(async command => {
@@ -17,10 +19,9 @@ export const areAvailableOrFail = async (commands: (string | BashCommand<any>)[]
     .map((available, i) => !available ? commands[i] : undefined)
     .filter(command => command) as string[];
 
-
   if (missingCommands.length) {
-    const message = new List('The following commands are missing and must be installed:', missingCommands);
-    logger.error(message);
-    throw new ExitScope('missing-command', message);
+    const error = new MissingManyCommandsError({ commands: missingCommands });
+    logger.error(new MissingManyCommandsLog({ error, commands: missingCommands }));
+    throw error;
   }
 }

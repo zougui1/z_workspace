@@ -10,7 +10,7 @@ import { DatabaseLogger } from './DatabaseLogger';
 import { EmailLogger } from './EmailLogger';
 import { DiscordLogger } from './DiscordLogger';
 import { LoggerConfig } from '../config';
-import { IConstructedLog } from '../log';
+import { IConstructedLog, ILog } from '../log';
 import { LogLevel, LogKind } from '../enums';
 
 const nodeOnlyLoggers: Record<LogKind, boolean> = {
@@ -96,23 +96,40 @@ class Logger {
   }
 
   private async doLog(level: LogLevel, log: IConstructedLog): Promise<void> {
-    if (log.profile) {
-      const stopwatch = this._profilers[log.profile.label];
+    try {
+      await this.performLog(level, log);
+    } catch (error) {
+      console.error(`An error occurred while trying to log "${log.code}"`);
+      console.error(error);
+    }
+  }
+
+  private async performLog(level: LogLevel, log: IConstructedLog): Promise<void> {
+    log.setLevel(level).setTimeFormat(this._config?.common.date.format ?? 'YYYY-MM-DD hh:mm:ss.SSS A');
+
+    const logData = log.getLog();
+    const logConfig = log.getConfig();
+
+    if (logData.profile) {
+      const stopwatch = this._profilers[logData.profile.label];
 
       if (stopwatch) {
         const timing = stopwatch.stop().total;
         const timingMilliseconds = stopwatch.timings.total;
 
-        log.setProfileTiming({
+        logData.profile.timing = {
           formatted: timing,
           milliseconds: timingMilliseconds,
-        });
+        };
       } else {
-        this._profilers[log.profile.label] = new Stopwatch().start();
+        this._profilers[logData.profile.label] = new Stopwatch().start();
       }
     }
 
-    log.setLevel(level).setTimeFormat(this._config?.common.date.format ?? '');
+    if (!this._initialized) {
+      this.logFallback(logData);
+      return;
+    }
 
     const loggers = this.findAvailableLoggers({
       [LogKind.console]: this._console,
@@ -123,10 +140,11 @@ class Logger {
       [LogKind.discord]: this._discord,
     }, log.logKinds);
 
-    const logData = log.getLog();
-    const logConfig = log.getConfig();
-
-    await Promise.all(loggers.map(logger => logger.log(logData, logConfig)));
+    try {
+      await Promise.all(loggers.map(logger => logger.log(logData, logConfig)));
+    } catch (error) {
+      console.error(`An error occurred while logging:\n  ${logData.message}\nError: ${error}`);
+    }
   }
   //#endregion
 
@@ -140,6 +158,21 @@ class Logger {
 
   private canLog(kind: LogKind, kinds: LogKind[] | undefined): boolean {
     return (!isBrowser || !nodeOnlyLoggers[kind]) && (!kinds?.length || kinds.includes(kind));
+  }
+  //#endregion
+
+  //#region private
+  private logFallback(log: ILog): void {
+    console.group('Tried to log without configuring the logger:');
+    console.warn(log.message);
+
+    if (log.data.error) {
+      console.log(log.data.error);
+    } else if ([LogLevel.warn, LogLevel.error, LogLevel.fatal].includes(log.level)) {
+      console.trace();
+    }
+
+    console.groupEnd();
   }
   //#endregion
 }

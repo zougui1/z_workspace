@@ -1,9 +1,11 @@
-import { logExecuting, logExecuted, ExitScope, ProfileLog, LogKind } from '@zougui/logger';
+import { logger } from '@zougui/logger';
 import { execSpawn, indent } from '@zougui/utils';
 
 import { ICommand } from './ICommand';
 import { BashCommand, StringifyArgsOptions } from './BashCommand';
 import { setEnvVar, SetEnvVarOptions } from './setEnvVar';
+import { MissingManyUnknownCommandsError } from './errors';
+import { IGroupedCommands, ExecutingGroupedCommandLog, ExecutedGroupedCommandLog } from './logs';
 
 export enum CommandSeparation {
   separate = '; ',
@@ -115,7 +117,7 @@ export class GroupedCommands implements ICommand {
     const missingCommands = availables.filter(available => !available);
 
     if (missingCommands.length) {
-      throw new ExitScope('missing-command', new Error(`${missingCommands.length} commands are missing and must be installed.`));
+      throw new MissingManyUnknownCommandsError({ missingCount: missingCommands.length });
     }
   }
 
@@ -140,19 +142,28 @@ export class GroupedCommands implements ICommand {
 
   async exec(): Promise<void> {
     const command = this.toString();
-    //const description = this.toDescription();
 
-    const log = new ProfileLog(command, {})
-      .setMessage(LogKind.file, this.toString({ indent: true }))
-      .setMessage(this.toString({ indent: true, aliases: true }));
-
-    logExecuting(log);
+    logger.info(new ExecutingGroupedCommandLog({ group: this.toJson() }));
     await execSpawn(command);
-    logExecuted(log);
+    logger.info(new ExecutedGroupedCommandLog({ group: this.toJson() }));
   }
   //#endregion
 
   //#region private
+  toJson(): IGroupedCommands {
+    return {
+      commands: this.commands.map(c => c.toJson()),
+      envVars: this.envVars.map(envVar => ({
+        name: envVar.name,
+        value: typeof envVar.value === 'string'
+          ? envVar.value
+          : envVar.value.toJson(),
+        options: envVar.options,
+      })),
+      separator: this.separator,
+    };
+  }
+
   toDescription(): string {
     const description = this.commands
       .map(command => command.toDescription())

@@ -1,10 +1,10 @@
 import fs from 'fs-extra';
 import path from 'path';
 import moment from 'moment';
-import { logger, ExitScope } from '@zougui/logger';
-import { Exception } from '@zougui/error';
+import { logger } from '@zougui/logger';
 
 import { FindLastBackupsErrorLog } from './logs';
+import { LastBackupsNotFoundError, LastBackupLogReadError } from './errors';
 import { IConfig } from '../../backup-config';
 
 export const findLastBackups = async (config: IConfig): Promise<string[]> => {
@@ -18,7 +18,7 @@ export const findLastBackups = async (config: IConfig): Promise<string[]> => {
 
       return lastBackup;
     } catch (error) {
-      const exception = new Exception(`Couldn't find the last backup at "${dir}"`, 'ERR_FIND_LAST_BACKUP', error);
+      const exception = new LastBackupsNotFoundError({ dir, error });
       const findLastBackupsErrorLog = new FindLastBackupsErrorLog({ dir, error: exception });
       logger.error(findLastBackupsErrorLog);
     }
@@ -31,7 +31,7 @@ const readBackupLog = async (backupPath: string): Promise<string> => {
   try {
     return await fs.readFile(path.join(backupPath, 'backup-log.json'), 'utf8');
   } catch (error) {
-    throw new ExitScope('read-backup-log', error);
+    throw new LastBackupLogReadError({ backupPath, error });
   }
 }
 

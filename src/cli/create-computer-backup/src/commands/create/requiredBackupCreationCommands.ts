@@ -1,6 +1,5 @@
 import { bash } from '@zougui/bash';
-
-import { requiredPackageManegementCommands } from '../../package-manager';
+import { pacman } from '@zougui/package-manager';
 
 export const requiredBackupCreationCommands = [
   bash.commands.rsync,
@@ -10,5 +9,5 @@ export const requiredBackupCreationCommands = [
   bash.commands.du,
   bash.commands.awk,
   bash.commands.rm,
-  ...requiredPackageManegementCommands,
+  pacman.command,
 ];

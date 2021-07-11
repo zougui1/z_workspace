@@ -12,12 +12,15 @@ export async function up(knex: Knex): Promise<void> {
     table.string('topics', 512).notNullable();
     // Objects as JSON string
     table.string('time', 512).notNullable();
+    table.text('profile').nullable();
     table.text('data').notNullable();
     table.string('context', 2500).notNullable();
+    table.string('scope', 500).notNullable();
+    table.text('transaction').nullable();
   });
 }
 
 
 export async function down(knex: Knex): Promise<void> {
-  knex.schema.dropTable('logs');
+  await knex.schema.dropTable('logs');
 }

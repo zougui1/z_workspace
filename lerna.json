@@ -3,9 +3,11 @@
     "src/business-packages/*",
     "src/technical-packages/*",
     "src/data-packages/*",
+    "src/workflow-packages/*",
     "src/prototype-packages/*",
     "src/api/*",
     "src/cli/*",
+    "src/bots/*",
     "src/apps/*"
   ],
   "version": "1.0.0"

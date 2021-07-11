@@ -52,14 +52,14 @@ export class ConsoleLogger extends BaseLogger<LoggerConsoleConfig> {
       { message: '[' },
       {
         message: moment(log.time.createdAt).format(log.time.format),
-        styles: { color: 'white' },
+        styles: { color: '#fff' },
       },
       { message: ' ' },
       {
         message: _.snakeCase(log.level),
         styles: { color: LogColor[log.level] },
       },
-      { message: ' ' },
+      { message: timing ? ' ' : '' },
       {
         message: timing,
         styles: { color: '#ffdd00' },
@@ -67,8 +67,9 @@ export class ConsoleLogger extends BaseLogger<LoggerConsoleConfig> {
       { message: '] ' },
       {
         message: log.topics[0] ?? '',
-        styles: { color: 'magenta' },
+        styles: { color: '#ff39b2' },
       },
+      { message: ' ' },
       { message: log.message },
     ]);
   }

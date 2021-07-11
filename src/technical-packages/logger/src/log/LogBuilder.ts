@@ -1,19 +1,26 @@
+import { PartialDeep } from 'type-fest';
+
 import { toFunction } from '@zougui/utils';
+import { TransactionContext } from '@zougui/transaction-context';
 
 import { logFactory } from './logFactory';
-import { ILogProfile, LogContext, IConstructedLog } from './types';
+import { ILogProfile, LogContext, IConstructedLog, ILogScope } from './types';
 import { LogKind } from '../enums';
 import { LoggerConfig } from '../config';
 
 export class LogBuilder<T extends Record<string, any>> {
 
   protected logKinds: LogKind[] = [];
-  protected config?: (context: LogContext<T>) => LoggerConfig;
+  protected config?: (context: LogContext<T>) => PartialDeep<LoggerConfig>;
   protected code?: string;
-  protected scope?: string;
+  protected scope?: Partial<ILogScope>;
   protected topics: string[] = [];
   protected message?: (context: LogContext<T>) => string;
-  protected profile?: ILogProfile;
+  protected transaction?: TransactionContext;
+  protected profile?: {
+    label: (context: LogContext<T>) => string;
+    timing?: ILogProfile['timing'];
+  };
 
   setLogKinds(logKinds: LogKind[]): this {
     this.logKinds = logKinds;
@@ -25,7 +32,7 @@ export class LogBuilder<T extends Record<string, any>> {
     return this;
   }
 
-  setOptions(config: LoggerConfig | ((context: LogContext<T>) => LoggerConfig)): this {
+  setOptions(config: PartialDeep<LoggerConfig> | ((context: LogContext<T>) => PartialDeep<LoggerConfig>)): this {
     this.config = toFunction(config);
     return this;
   }
@@ -35,8 +42,11 @@ export class LogBuilder<T extends Record<string, any>> {
     return this;
   }
 
-  setScope(scope: string): this {
-    this.scope = scope;
+  setScope(scope: Partial<ILogScope>): this {
+    this.scope = {
+      name: scope.name,
+      version: scope.version,
+    };
     return this;
   }
 
@@ -50,8 +60,13 @@ export class LogBuilder<T extends Record<string, any>> {
     return this;
   }
 
-  setProfile(label: string): this {
-    this.profile = { label };
+  setTransaction(transaction: TransactionContext): this {
+    this.transaction = transaction;
+    return this;
+  }
+
+  setProfile(label: string | ((context: LogContext<T>) => string)): this {
+    this.profile = { label: toFunction(label) };
     return this;
   }
 
@@ -67,7 +82,9 @@ export class LogBuilder<T extends Record<string, any>> {
     this.checkMissingProperty('message');
 
     const code = this.code || 'log.code.unknown';
-    const scope = this.scope || 'log.scope.unknown';
+    const scope: ILogScope = (this.scope || {} as ILogScope) as ILogScope;
+    scope.name ||= 'unknown-scope-name';
+    scope.version ||= '0.0.0';
     const message = this.message || (() => 'No message provided');
 
     return logFactory({
@@ -77,6 +94,7 @@ export class LogBuilder<T extends Record<string, any>> {
       scope: scope,
       topics: this.topics,
       message: message,
+      transaction: this.transaction,
       profile: this.profile,
     });
   }
