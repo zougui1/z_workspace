@@ -1,0 +1,27 @@
+{
+  "name": "@zougui/jest-config",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib",
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "start": "nodemon -r source-map-support/register lib",
+    "build": "npm-run-all clean compile",
+    "clean": "rm -rf ./lib & rm -f tsconfig.tsbuildinfo",
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --collectCoverage"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "jest": "^27.0.4",
+    "source-map-support": "^0.5.19",
+    "typescript": "^4.4.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,6 @@
+{
+  "port": "env(SERVER_PORT)",
+  "settings": {
+    "loggerFormat": "tiny"
+  }
+}

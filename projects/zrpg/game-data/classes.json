@@ -1,0 +1,291 @@
+{
+  "data": [
+    {
+      "id": "warrior",
+      "className": "Warrior",
+      "branch": "warrior",
+      "stats": {
+        "health": 15,
+        "mana": 0,
+        "strength": 6,
+        "resistance": 3,
+        "magicalMight": 0,
+        "magicalMending": 0,
+        "agility": 2,
+        "deftness": 3
+      },
+      "available": "always",
+      "equipables": [
+        "boots",
+        "chestplate",
+        "greatShield",
+        "greatsword",
+        "heavyLegware",
+        "heavyShield",
+        "helmet",
+        "lightShield",
+        "sword"
+      ]
+    },
+    {
+      "id": "thief",
+      "className": "Thief",
+      "branch": "thief",
+      "stats": {
+        "health": 12,
+        "mana": 3,
+        "strength": 3,
+        "resistance": 3,
+        "magicalMight": 2,
+        "magicalMending": 1,
+        "agility": 3,
+        "deftness": 4
+      },
+      "available": "always",
+      "equipables": [
+        "claws",
+        "costume",
+        "costumeFootware",
+        "dagger",
+        "hat",
+        "headgear",
+        "knife",
+        "legware",
+        "shoes"
+      ]
+    },
+    {
+      "id": "mage",
+      "className": "Mage",
+      "branch": "mage",
+      "stats": {
+        "health": 11,
+        "mana": 7,
+        "strength": 1,
+        "resistance": 2,
+        "magicalMight": 4,
+        "magicalMending": 2,
+        "agility": 2,
+        "deftness": 3
+      },
+      "available": "always",
+      "equipables": [
+        "costumeLegware",
+        "hat",
+        "heavyStaff",
+        "lightShield",
+        "robe",
+        "shoes"
+      ]
+    },
+    {
+      "id": "priest",
+      "className": "Priest",
+      "branch": "mage",
+      "stats": {
+        "health": 13,
+        "mana": 7,
+        "strength": 1,
+        "resistance": 2,
+        "magicalMight": 2,
+        "magicalMending": 4,
+        "agility": 3,
+        "deftness": 2
+      },
+      "available": "always",
+      "equipables": [
+        "costumeLegware",
+        "hat",
+        "lightShield",
+        "robe",
+        "shoes",
+        "staff"
+      ]
+    },
+    {
+      "id": "ranger",
+      "className": "Ranger",
+      "branch": "ranger",
+      "stats": {
+        "health": 13,
+        "mana": 3,
+        "strength": 3,
+        "resistance": 2,
+        "magicalMight": 1,
+        "magicalMending": 1,
+        "agility": 5,
+        "deftness": 5
+      },
+      "available": "always",
+      "equipables": [
+        "bow",
+        "costume",
+        "costumeFootware",
+        "costumeLegware",
+        "dagger",
+        "hat",
+        "headgear",
+        "knife",
+        "legware"
+      ]
+    },
+    {
+      "id": "gladiator",
+      "className": "Gladiator",
+      "branch": "warrior",
+      "stats": {
+        "health": 18,
+        "mana": 0,
+        "strength": 7,
+        "resistance": 1,
+        "magicalMight": 0,
+        "magicalMending": 0,
+        "agility": 2,
+        "deftness": 3
+      },
+      "available": {
+        "type": "quest",
+        "id": -1
+      },
+      "equipables": [
+        "boots",
+        "chestplate",
+        "greatsword",
+        "heavyLegware",
+        "helmet",
+        "lightShield",
+        "sword"
+      ]
+    },
+    {
+      "id": "sage",
+      "className": "Sage",
+      "branch": "mage",
+      "stats": {
+        "health": 14,
+        "mana": 11,
+        "strength": 1,
+        "resistance": 1,
+        "magicalMight": 7,
+        "magicalMending": 7,
+        "agility": 2,
+        "deftness": 2
+      },
+      "available": {
+        "type": "quest",
+        "id": -1
+      },
+      "equipables": [
+        "costumeLegware",
+        "hat",
+        "heavyStaff",
+        "robe",
+        "shoes",
+        "staff"
+      ]
+    },
+    {
+      "id": "paladin",
+      "className": "Paladin",
+      "branch": "warrior",
+      "stats": {
+        "health": 22,
+        "mana": 3,
+        "strength": 4,
+        "resistance": 4,
+        "magicalMight": 0,
+        "magicalMending": 3,
+        "agility": 3,
+        "deftness": 2
+      },
+      "available": {
+        "type": "quest",
+        "id": -1
+      },
+      "equipables": [
+        "boots",
+        "chestplate",
+        "claws",
+        "dagger",
+        "greatShield",
+        "heavyLegware",
+        "heavyShield",
+        "helmet",
+        "lightShield",
+        "sword"
+      ]
+    },
+    {
+      "id": "monk",
+      "className": "Monk",
+      "branch": "monk",
+      "stats": {},
+      "available": {
+        "type": "quest",
+        "id": -1
+      },
+      "equipables": [],
+      "status": "todo"
+    },
+    {
+      "id": "martialArtist",
+      "className": "MartialArtist",
+      "branch": "monk",
+      "stats": {},
+      "available": {
+        "type": "quest",
+        "id": -1
+      },
+      "equipables": [],
+      "status": "todo"
+    },
+    {
+      "id": "merchant",
+      "className": "Merchant",
+      "branch": "merchant",
+      "stats": {},
+      "available": {
+        "type": "quest",
+        "id": -1
+      },
+      "equipables": [],
+      "status": "todo"
+    },
+    {
+      "id": "tamer",
+      "className": "Tamer",
+      "branch": "tamer",
+      "stats": {},
+      "available": {
+        "type": "quest",
+        "id": -1
+      },
+      "equipables": [],
+      "status": "todo"
+    },
+    {
+      "id": "hunter",
+      "className": "Hunter",
+      "branch": "ranger",
+      "stats": {},
+      "available": {
+        "type": "quest",
+        "id": -1
+      },
+      "equipables": [],
+      "status": "todo"
+    },
+    {
+      "id": "skinwalker",
+      "className": "Skinwalker",
+      "branch": "skinwalker",
+      "stats": {},
+      "available": {
+        "type": "quest",
+        "id": -1
+      },
+      "equipables": [],
+      "status": "todo"
+    }
+  ]
+}

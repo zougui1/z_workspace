@@ -1,0 +1,43 @@
+{
+  "name": "@zougui/move-backups",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib",
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "start": "nodemon -r source-map-support/register lib",
+    "build": "npm-run-all clean compile",
+    "clean": "rm -rf ./lib & rm -f tsconfig.tsbuildinfo",
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@types/jest": "^26.0.24",
+    "@zougui/bash": "^1.0.0",
+    "@zougui/env": "^1.0.0",
+    "@zougui/error": "^1.0.0",
+    "@zougui/logger": "^1.0.0",
+    "@zougui/permissions": "^1.0.0",
+    "@zougui/thread-manager": "^1.0.0",
+    "@zougui/transaction-context": "^1.0.0",
+    "@zougui/user-config-file": "^1.0.0",
+    "@zougui/utils": "^1.0.0",
+    "commander": "^7.2.0",
+    "fs-extra": "^10.0.0",
+    "jest": "^27.0.4",
+    "joi": "^17.4.0",
+    "moment": "^2.29.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.12",
+    "@types/lodash": "^4.14.170",
+    "@zougui/jest-config": "^1.0.0",
+    "source-map-support": "^0.5.19",
+    "typescript": "^4.4.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
