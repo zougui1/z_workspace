@@ -1,19 +1,14 @@
 {
   "packages": [
-    "common/ecosystem",
     "common/react-packages/*",
     "common/react-http-packages/*",
     "common/type-packages/*",
-    "common/business-packages/*",
     "common/technical-packages/*",
-    "common/data-packages/*",
     "common/workflow-packages/*",
     "common/prototype-packages/*",
     "common/http-packages/*",
-    "common/api/*",
     "common/cli/*",
     "common/bots/*",
-    "common/clients/*",
 
     "projects/*/ecosystem",
     "projects/*/src/react-packages/*",
@@ -21,14 +16,9 @@
     "projects/*/src/type-packages/*",
     "projects/*/src/business-packages/*",
     "projects/*/src/technical-packages/*",
-    "projects/*/src/data-packages/*",
-    "projects/*/src/workflow-packages/*",
     "projects/*/src/prototype-packages/*",
     "projects/*/src/http-packages/*",
-    "projects/*/src/api/*",
-    "projects/*/src/cli/*",
-    "projects/*/src/bots/*",
-    "projects/*/src/clients/*"
+    "projects/*/src/apps/*"
   ],
   "version": "1.0.0"
 }

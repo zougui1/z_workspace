@@ -1,0 +1,13 @@
+{
+  "name": "@workflow-service/ecosystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ecosystem.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@zougui/ecosystem-core": "^1.0.0",
+    "@zougui/env": "^1.0.0"
+  }
+}

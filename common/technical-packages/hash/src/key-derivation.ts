@@ -1,10 +1,10 @@
 import crypto from 'crypto';
 
-import { hash, HashOptions } from './hash';
+import { createArgon2Hash, HashOptions } from './createArgon2Hash';
 
-export const deriveKey = async (plain: string, options: DeriveKeyOptions): Promise<DerivedKey> => {
+export const deriveKeyWithSalt = async (plain: string, options: DeriveKeyOptions): Promise<DerivedKey> => {
   const salt = crypto.randomBytes(options.saltLength);
-  const hashed = await hash(plain, {
+  const hashed = await createArgon2Hash(plain, {
     ...options,
     saltLength: undefined,
     salt,
@@ -13,8 +13,8 @@ export const deriveKey = async (plain: string, options: DeriveKeyOptions): Promi
   return { salt, hash: hashed };
 }
 
-export const deriveKeyFromSalt = async (plain: string, options: DeriveKeyFromSaltOptions): Promise<string> => {
-  const hashed = await hash(plain, {
+export const deriveKey = async (plain: string, options: DeriveKeyFromSaltOptions): Promise<string> => {
+  const hashed = await createArgon2Hash(plain, {
     ...options,
     saltLength: undefined,
   });

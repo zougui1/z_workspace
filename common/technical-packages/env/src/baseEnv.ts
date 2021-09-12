@@ -6,3 +6,4 @@ export const APP_VERSION = get('npm_package_version').default('0.0.0').asString(
 export const NODE_ENV = get('NODE_ENV').default('development').asString();
 export const WORKSPACE = '/mnt/Manjaro_Data/zougui/workspace/';
 export const APP_WORKSPACE = path.join(WORKSPACE, APP_NAME);
+export const isDev = NODE_ENV === 'development';

@@ -8,3 +8,4 @@ export * from './number';
 export * from './object';
 export * from './boolean';
 export * from './value';
+export * from './url';

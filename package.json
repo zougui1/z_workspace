@@ -2,11 +2,12 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "start": "pm2 start common/ecosystem/ecosystem.config.js --env development",
     "start:zrpg": "pm2 start projects/zrpg/ecosystem/ecosystem.config.js --env development",
     "start:zprint": "pm2 start projects/zprint/ecosystem/ecosystem.config.js --env development",
-    "start:user-service": "pm2 start projects/user-service/ecosystem/ecosystem.config.js --env development",
-    "start:file-storage": "pm2 start projects/file-storage/ecosystem/ecosystem.config.js --env development",
+
+    "start:user-service": "pm2 start services/user-service/ecosystem/ecosystem.config.js --env development",
+    "start:storage-service": "pm2 start services/storage-service/ecosystem/ecosystem.config.js --env development",
+
     "clean": "lerna run clean",
     "compile": "lerna run compile",
     "compile:watch": "lerna run --parallel compile:watch",
