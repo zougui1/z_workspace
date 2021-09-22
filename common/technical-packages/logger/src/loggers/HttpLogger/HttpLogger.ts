@@ -17,9 +17,11 @@ export class HttpLogger extends BatchLogger<LoggerHttpConfig> {
   }
 
   protected async sendLogs(logs: BatchedLog[]): Promise<void> {
+    console.log('sendLogs')
     try {
       await axios.post(this._config.url, logs.map(log => log.log));
     } catch (error) {
+      console.error('HTTP log error', error)
       const errorLogs = logs.map(log => ({ ...log, error }));
       this.emit('batch-error', errorLogs);
     }

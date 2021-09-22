@@ -1,6 +1,7 @@
-import { log } from '@zougui/log-database';
 import { ILog } from '@zougui/log-types';
 import { doTry } from '@zougui/error';
+
+import { log } from '@log-service/database';
 
 import { CreateLogError } from './errors';
 import { validateLog } from '../validations';

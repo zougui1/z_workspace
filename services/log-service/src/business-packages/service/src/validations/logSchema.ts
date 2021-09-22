@@ -94,6 +94,7 @@ export const logSchema = Joi.object({
   task: taskSchema,
   topics: Joi.array().items(Joi.string()).required(),
   message: Joi.string().required(),
+  namespace: Joi.string().required(),
   transaction: transactionSchema,
   createdAt: Joi.date().required(),
   data: Joi.object().required(),

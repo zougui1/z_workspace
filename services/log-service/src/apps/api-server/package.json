@@ -21,7 +21,7 @@
     "@zougui/cors": "^1.0.0",
     "@zougui/error": "^1.0.0",
     "@zougui/http-error": "^1.0.0",
-    "@zougui/log-service": "^1.0.0",
+    "@log-service/service": "^1.0.0",
     "@zougui/log-types": "^1.0.0",
     "@zougui/logger": "^1.0.0",
     "@zougui/server-request-hooks": "^1.0.0",

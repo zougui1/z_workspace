@@ -17,24 +17,29 @@ const fetchUsers = async (token: string) => {
 
 // @ts-ignore
 const signup = async () => {
-  await axios.post('http://localhost:3103/auth/signup', user);
+  await axios.post('http://localhost:3103/auth/signup', { ...user, id: undefined });
 }
 
 const login = async () => {
-  const { data } = await axios.post('http://localhost:3103/auth/login', user);
+  const { data } = await axios.post('http://localhost:3103/auth/login', {
+    name: user.name,
+    email: user.email,
+    password: user.password,
+  });
   console.log('token', data.accessToken);
   return data.accessToken;
 }
 
 (async () => {
   try {
-    //await signup();
+    await signup();
     const token = await login();
     await fetchUsers(token);
     const signed = await axios.get('http://localhost:3103/auth/sign-url', {
       params: {
         url: 'http://localhost:3104/api/v1/files/users/0/dragon_0.png',
         expiry: '15 min',
+        something: ['first', 'second']
       },
       headers: { Authorization: `Bearer ${token}` },
     });

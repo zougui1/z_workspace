@@ -24,6 +24,7 @@
     "@zougui/env": "^1.0.0",
     "@zougui/utils": "^1.0.0",
     "knex": "0.21.19",
+    "lodash": "^4.17.21",
     "objection": "^2.2.15",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.1.0"
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@casl/ability": "^5.4.3",
     "@types/jest": "^26.0.24",
+    "@types/lodash": "^4.14.172",
     "@zougui/jest-config": "^1.0.0",
     "jest": "^27.0.4",
     "jest-date-mock": "^1.0.8",

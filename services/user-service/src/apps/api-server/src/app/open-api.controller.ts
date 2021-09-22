@@ -1,7 +1,7 @@
 import { SwaggerController } from '@foal/swagger';
 
-import { ApiController } from './api';
+import { V1Controller } from './v1';
 
 export class OpenApiController extends SwaggerController {
-  options = { controllerClass: ApiController };
+  options = { controllerClass: V1Controller };
 }

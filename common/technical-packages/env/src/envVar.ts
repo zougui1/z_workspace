@@ -5,16 +5,12 @@ import { config } from './configEnv';
 
 export * from 'env-var';
 
-export function get(): { [varName: string]: string };
-export function get(varName: string): envVar.IOptionalVariable;
-export function get(varName?: string): { [varName: string]: string } | envVar.IOptionalVariable {
+export const get = (varName: string): envVar.IOptionalVariable => {
   if (!isBrowser) {
     config();
   }
 
-  return varName
-    ? envVar.get(getPublicVarName(varName))
-    : envVar.get();
+  return envVar.get(getPublicVarName(varName));
 }
 
 const getPublicVarName = (varName: string): string => {

@@ -1,7 +1,10 @@
+import { ModelObject } from 'objection';
+
 import { UserModel } from '../UserModel';
 
-export const createUser = async (user: CreateUserDTO): Promise<UserModel.Instance> => {
-  return await UserModel.query().insert(user);
+export const createUser = async (user: CreateUserDTO): Promise<ModelObject<UserModel>> => {
+  const createdUser = await UserModel.query().insert(user);
+  return createdUser.toJSON();
 }
 
 export interface CreateUserDTO {

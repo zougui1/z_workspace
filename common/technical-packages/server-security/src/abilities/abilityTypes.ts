@@ -1,11 +1,5 @@
-import { Ability as CaslAbility, AbilityTuple, Subject, MongoQuery } from '@casl/ability';
-
-type BasicAbility = CaslAbility<AbilityTuple<string, Subject>, MongoQuery<Record<string, any>>>;
-export type Ability = BasicAbility & {
-  must: BasicAbility['can'];
-  mustNot: BasicAbility['cannot'];
-};
+import { BetterAbility } from './BetterAbility';
 
 export interface AbilityState {
-  ability: Ability;
+  ability: BetterAbility;
 }

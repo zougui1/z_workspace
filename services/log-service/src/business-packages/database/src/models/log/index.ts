@@ -1,7 +1,6 @@
 import { findLogs, findTransactions, findTasks } from './read';
 import { createLog } from './create';
 
-import { LogModel } from './LogModel';
 import { FindLogsOptions } from './read';
 
 
@@ -11,8 +10,6 @@ export const log = {
   findTasks,
 
   create: createLog,
-
-  LogModel,
 };
 
 export namespace Log {

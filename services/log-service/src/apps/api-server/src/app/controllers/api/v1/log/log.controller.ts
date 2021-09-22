@@ -1,6 +1,6 @@
 import { Context, Get, Post, HttpResponseOK, ApiResponse } from '@foal/core';
 
-import { log } from '@zougui/log-service';
+import { log } from '@log-service/service';
 import { ILog } from '@zougui/log-types';
 import { PaginatedRequest } from '@zougui/server-request-hooks';
 

@@ -2,6 +2,7 @@ import isBrowser from 'is-browser';
 
 import { threadList } from '@zougui/thread-list';
 import { ILog } from '@zougui/log-types';
+import { toMs } from '@zougui/utils';
 
 import { BaseLogger } from './BaseLogger';
 import { LoggerConfig, LoggerBaseConfig, BatchConfig } from '../config';
@@ -45,8 +46,15 @@ export abstract class BatchLogger<TConf extends (LoggerBaseConfig & { batch: Bat
   private init(): void {
     const { interval } = this._config.batch;
     const flush = () => this.flush();
+    const msInterval = toMs(interval as any);
 
-    setInterval(flush, interval);
+    if (isNaN(msInterval)) {
+      throw new Error(`Invalid interval, expected a number or a parseable string. Got ${interval}`);
+    }
+
+    console.log('interval', interval, msInterval);
+
+    setInterval(flush, msInterval);
     threadList.addCleanup(flush);
 
     if (isBrowser) {

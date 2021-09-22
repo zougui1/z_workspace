@@ -4,7 +4,7 @@ import { TransactionContext } from '@zougui/transaction-context';
 import { LogKind } from '@zougui/log-types';
 
 import { LogBuilder } from './LogBuilder';
-import { taskLogFactory, TaskLogs } from './taskLogFactory';
+import { taskLogFactory, TaskLogs as ITaskLogs } from './taskLogFactory';
 import { LogContext, IConstructedLog } from './types';
 import { LoggerConfig } from '../config';
 
@@ -46,6 +46,14 @@ export class TaskLogBuilder<T extends Record<string, any>, TError extends Record
     return this;
   }
 
+  setSubNamespace(subNamespace: string): this {
+    this.start.setSubNamespace(subNamespace);
+    this.success.setSubNamespace(subNamespace);
+    this.error.setSubNamespace(subNamespace);
+
+    return this;
+  }
+
   setTopics(topics: string[]): this {
     this.start.setTopics(topics);
     this.success.setTopics(topics);
@@ -78,7 +86,7 @@ export class TaskLogBuilder<T extends Record<string, any>, TError extends Record
     return this;
   }
 
-  toClass(): (new (data: T, taskId?: string) => TaskLogs<T, TError & { error?: any }, TSuccess>) {
+  toClass(): (new (data: T, taskId?: string) => TaskLogs<T, TError, TSuccess>) {
     return taskLogFactory<T, TError & { error?: any }, TSuccess>({
       Start: this.start.toClass(),
       Success: this.success.toClass() as (new (data: T & TSuccess) => IConstructedLog<TSuccess>),
@@ -92,3 +100,5 @@ export interface TaskMessages<T extends Record<string, any>, TError extends Reco
   success: string | ((context: LogContext<T & TSuccess>) => string);
   error: string | ((context: LogContext<T & TError & { error?: any }>) => string);
 }
+
+export type TaskLogs<T extends Record<string, any>, TError extends Record<string, any> = {}, TSuccess extends Record<string, any> = {}> = ITaskLogs<T, TError & { error?: any }, TSuccess>;

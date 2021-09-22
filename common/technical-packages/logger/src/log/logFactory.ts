@@ -20,6 +20,7 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
     level?: LogLevel;
     readonly code: string = log.code;
     task?: ILogTask;
+    namespace?: string;
     readonly topics: string[] = log.topics;
     readonly message: (context: LogContext<TData>) => string = log.message;
     readonly transaction?: ILogTransaction;
@@ -58,6 +59,13 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
 
     setLevel(level: LogLevel): this {
       this.level = level;
+      return this;
+    }
+
+    setNamespace(namespace: string): this {
+      this.namespace = log.subNamespace
+        ? `${namespace}:${log.subNamespace}`
+        : namespace;
       return this;
     }
 
@@ -102,8 +110,9 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
     }
 
     getLog(): ILog<TData> {
-      const context = this.getLogContext();
+      this.checkMissingProperty('namespace');
 
+      const context = this.getLogContext();
       const transaction = context.transaction && {
         ...context.transaction,
         time: {
@@ -118,6 +127,7 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
         code: this.code,
         task: this.task,
         topics: this.topics,
+        namespace: this.namespace || '',
         message: this.message(context),
         transaction,
         createdAt: context.createdAt.format(logFormat),
@@ -131,6 +141,7 @@ export const logFactory = <T extends Record<string, any>>(log: LogPrototype<T>):
 
 export type LogPrototype<T extends Record<string, any>> = {
   logKinds: LogKind[];
+  subNamespace?: string;
   config?: (context: LogContext<T>) => PartialDeep<LoggerConfig>;
   code: string;
   topics: string[];

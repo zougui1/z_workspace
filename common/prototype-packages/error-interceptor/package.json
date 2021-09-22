@@ -27,7 +27,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@zougui/log-database": "^1.0.0",
+    "@log-service/database": "^1.0.0",
     "joi": "^17.4.0",
     "moment": "^2.29.1",
     "pattern-matching-ts": "^2.0.0"

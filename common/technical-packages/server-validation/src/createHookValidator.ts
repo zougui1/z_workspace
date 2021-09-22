@@ -4,7 +4,6 @@ import { ObjectSchema, AsyncValidationOptions } from 'joi';
 const defaultOptions: AsyncValidationOptions = {
   abortEarly: false,
   allowUnknown: true,
-
 };
 
 export const createHookValidator = (key: 'body' | 'params' | 'query', getValidationErrorHttpResponse: GetValidationErrorHttpResponse) =>  (schema: ObjectSchema, options: AsyncValidationOptions = {}): HookDecorator => {

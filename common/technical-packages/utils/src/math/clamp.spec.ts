@@ -5,23 +5,26 @@ describe('clamp()', () => {
     const value = 0;
     const min = 5;
     const max = 15;
-    const result = clamp(value, min ,max);
-    expect(result).toEqual(min);
+    const result = clamp(value, min, max);
+
+    expect(result).toBe(min);
   });
 
   it('should return the maximum if value is greater than the maximum', () => {
     const value = 50;
     const min = 5;
     const max = 15;
-    const result = clamp(value, min ,max);
-    expect(result).toEqual(max);
+    const result = clamp(value, min, max);
+
+    expect(result).toBe(max);
   });
 
   it('should return the value if it is between the minimum and maximum', () => {
     const value = 10;
     const min = 5;
     const max = 15;
-    const result = clamp(value, min ,max);
-    expect(result).toEqual(value);
+    const result = clamp(value, min, max);
+
+    expect(result).toBe(value);
   });
 });

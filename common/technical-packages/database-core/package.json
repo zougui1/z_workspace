@@ -19,6 +19,7 @@
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.170",
     "@types/pluralize": "^0.0.29",
+    "@types/uuid": "^8.3.1",
     "@zougui/jest-config": "^1.0.0",
     "jest": "^27.0.4",
     "source-map-support": "^0.5.19",
@@ -27,12 +28,19 @@
   },
   "dependencies": {
     "@zougui/env": "^1.0.0",
+    "@zougui/error": "^1.0.0",
+    "@zougui/log-types": "^1.0.0",
+    "@zougui/logger": "^1.0.0",
+    "@zougui/utils": "^1.0.0",
     "knex": "0.21.19",
     "lodash": "^4.17.21",
     "mysql2": "^2.2.5",
     "objection": "^2.2.15",
+    "objection-visibility": "^1.1.0",
     "pluralize": "^8.0.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "sql-formatter": "^4.0.2",
+    "uuid": "^8.3.2"
   },
   "keywords": [],
   "author": "",

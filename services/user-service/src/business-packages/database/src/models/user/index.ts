@@ -4,7 +4,6 @@ import {
   findUserById,
   findUsers, FindUsersOptions,
 } from './read';
-import { UserModel } from './UserModel';
 
 export const user = {
   find: findUsers,
@@ -12,8 +11,6 @@ export const user = {
   findById: findUserById,
 
   create: createUser,
-
-  Model: UserModel,
 }
 
 export namespace User {

@@ -1,10 +1,12 @@
 import { StateValueMap } from 'xstate';
 
-import { Model } from '@zougui/database-core';
+import { Model, Table, Log } from '@zougui/database-core';
 
 import { connectOnce } from '../connect';
 
-class WorkflowEvent<TContext extends (Record<string, any> & { machineId: string }) = any> extends Model {
+@Table(connectOnce)
+@Log()
+export class WorkflowEventModel<TContext extends (Record<string, any> & { machineId: string }) = any> extends Model {
 
   static jsonAttributes = ['workflow', 'state', 'event'];
 
@@ -12,12 +14,6 @@ class WorkflowEvent<TContext extends (Record<string, any> & { machineId: string 
   appName!: string;
   state!: State<TContext>
   event!: Record<string, any> & { type: string };
-}
-
-export const WorkflowEventModel = WorkflowEvent.connect(connectOnce);
-
-export namespace WorkflowEventModel {
-  export type Instance = InstanceType<typeof WorkflowEventModel>;
 }
 
 export interface Workflow {

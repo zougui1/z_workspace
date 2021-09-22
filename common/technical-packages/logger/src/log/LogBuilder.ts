@@ -17,6 +17,7 @@ export class LogBuilder<T extends Record<string, any>> {
   protected message?: (context: LogContext<T>) => string;
   protected transaction?: TransactionContext;
   protected version?: string;
+  protected subNamespace?: string;
 
   constructor() {
     this.setTransaction(transactionContext);
@@ -28,7 +29,7 @@ export class LogBuilder<T extends Record<string, any>> {
   }
 
   setLocalLogKinds(): this {
-    this.logKinds = [LogKind.console, LogKind.file, LogKind.database];
+    this.logKinds = [LogKind.console, LogKind.file];
     return this;
   }
 
@@ -39,6 +40,11 @@ export class LogBuilder<T extends Record<string, any>> {
 
   setCode(code: string): this {
     this.code = code;
+    return this;
+  }
+
+  setSubNamespace(subNamespace: string): this {
+    this.subNamespace = subNamespace;
     return this;
   }
 
@@ -79,6 +85,7 @@ export class LogBuilder<T extends Record<string, any>> {
 
     return logFactory({
       logKinds: this.logKinds,
+      subNamespace: this.subNamespace,
       config: this.config,
       code,
       topics: this.topics,

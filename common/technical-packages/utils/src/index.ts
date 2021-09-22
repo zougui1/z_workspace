@@ -1,4 +1,5 @@
 export * from './array';
+export * from './decorators';
 export * from './math';
 export * from './process';
 export * from './timers';

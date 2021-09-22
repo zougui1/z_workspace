@@ -7,6 +7,15 @@ export enum LogLevel {
   fatal = 'fatal',
 }
 
+export enum LogLevelNumber {
+  debug = 5,
+  info = 4,
+  success = 3,
+  warn = 2,
+  error = 1,
+  fatal = 0,
+}
+
 export enum LogColor {
   debug = '#1166ff',
   info = '#55aaff',
@@ -19,7 +28,6 @@ export enum LogColor {
 export enum LogKind {
   console = 'console',
   file = 'file',
-  database = 'database',
   http = 'http',
   email = 'email',
   discord = 'discord',

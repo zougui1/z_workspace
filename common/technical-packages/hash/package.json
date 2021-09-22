@@ -31,6 +31,7 @@
   "license": "ISC",
   "dependencies": {
     "@zougui/stopwatch": "^1.0.0",
+    "@zougui/utils": "^1.0.0",
     "argon2": "^0.28.2",
     "ms": "^2.1.3"
   }

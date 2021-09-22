@@ -1,14 +1,12 @@
 0 silly argv {
 0 silly argv   _: [ 'add' ],
-0 silly argv   dev: true,
-0 silly argv   D: true,
-0 silly argv   scope: '@user-service/user-database',
+0 silly argv   scope: '@zougui/database-core',
 0 silly argv   globs: [],
 0 silly argv   lernaVersion: '4.0.0',
 0 silly argv   '$0': 'lerna',
-0 silly argv   pkg: '@types/casl'
+0 silly argv   pkg: 'pretty-sql'
 0 silly argv }
 1 notice cli v4.0.0
 2 verbose rootPath /mnt/Dev/Code/javascript/zougui
-3 error HttpErrorGeneral: 404 Not Found - GET https://registry.npmjs.org/@types%2fcasl - Not found
+3 error HttpErrorGeneral: 404 Not Found - GET https://registry.npmjs.org/pretty-sql - Not found
 3 error     at /mnt/Dev/Code/javascript/zougui/node_modules/pacote/node_modules/npm-registry-fetch/check-response.js:95:15

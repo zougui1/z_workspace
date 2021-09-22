@@ -1,6 +1,7 @@
 import { Hook, HookDecorator, Context } from '@foal/core';
 
-import { Ability, AbilityState } from './abilityTypes';
+import { AbilityState } from './abilityTypes';
+import { BetterAbility } from './BetterAbility';
 
 export const CheckAbilities = (checkUserAbilities: AbilitiesChecker): HookDecorator => {
   return Hook(async (ctx: Context<any, any, Partial<AbilityState>>) => {
@@ -14,4 +15,4 @@ export const CheckAbilities = (checkUserAbilities: AbilitiesChecker): HookDecora
   });
 }
 
-export type AbilitiesChecker = (ability: Ability, ctx: Context<any, any, AbilityState>) => any | Promise<any>;
+export type AbilitiesChecker = (ability: BetterAbility, ctx: Context<any, any, AbilityState>) => any | Promise<any>;

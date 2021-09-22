@@ -1,10 +1,10 @@
 import crypto from 'crypto';
 import os from 'os';
 
-import ms from 'ms';
 import { hash, Options } from 'argon2';
 
 import { Stopwatch } from '@zougui/stopwatch';
+import { toMs } from '@zougui/utils';
 
 const ITERATIONS = 3;
 const PLAIN_TEXT = 'some plain text';
@@ -17,7 +17,11 @@ const hashParams: Record<string, Options> = {};
  * find the params required for the hash algorithm to take `hashTime` to make the hash
  */
 export const findHashParams = async (hashTime: number | string): Promise<Options> => {
-  const hashTimeMilliseconds = typeof hashTime === 'number' ? hashTime : ms(hashTime);
+  const hashTimeMilliseconds = toMs(hashTime as any);
+
+  if (isNaN(hashTimeMilliseconds)) {
+    throw new Error(`Invalid hash time, expected a number or a parsable string. Got: ${hashTime}`);
+  }
 
   return hashParams[hashTimeMilliseconds] ??= await performFindHashParams(hashTimeMilliseconds);
 }

@@ -1,11 +1,11 @@
 import { AbilityBuilder, Ability } from '@casl/ability';
 
-import { Ability as AbilityType } from './abilityTypes';
+import { BetterAbility } from './BetterAbility';
 
-export const abilitiesDefiner = async (defineUserAbilities: ((abilityBuilder: AbilityBuilder<Ability>) => any | Promise<any>)): Promise<AbilityType> => {
+export const abilitiesDefiner = async (defineUserAbilities: ((abilityBuilder: AbilityBuilder<Ability>) => any | Promise<any>)): Promise<BetterAbility> => {
   const abilityBuilder = new AbilityBuilder(Ability);
   await defineUserAbilities(abilityBuilder);
-  const ability = new Ability(abilityBuilder.rules);
+  const ability = new BetterAbility(abilityBuilder.rules);
 
-  return ability as AbilityType;
+  return ability;
 }

@@ -17,13 +17,17 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
+    "@types/ms": "^0.7.31",
+    "@zougui/jest-config": "^1.0.0",
     "jest": "^27.0.4",
     "jest-date-mock": "^1.0.8",
     "jest-extended": "^0.11.5",
-    "ts-jest": "^27.0.3",
-    "@zougui/jest-config": "^1.0.0"
+    "ts-jest": "^27.0.3"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ms": "^3.0.0-canary.1"
+  }
 }

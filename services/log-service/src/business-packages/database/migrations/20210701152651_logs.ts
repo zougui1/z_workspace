@@ -6,6 +6,7 @@ export async function up(knex: Knex): Promise<void> {
     table.increments('id').primary();
     table.string('logId').unique().notNullable();
     table.string('message', 5000).notNullable();
+    table.string('namespace', 500).notNullable();
     table.string('level').notNullable();
     table.string('code', 512).notNullable();
     table.string('version', 20).notNullable();

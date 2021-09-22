@@ -1,4 +1,4 @@
-import { Log as LogDb } from '@zougui/log-database';
+import { Log as LogDb } from '@log-service/database';
 
 import { createLog, createManyLogs, CreateLogError, CreateLogErrorData } from './create';
 import { findLogs, findTransactions, findTasks, FindLogsError, FindLogsErrorData } from './read';

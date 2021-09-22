@@ -1,11 +1,14 @@
 import * as uuid from 'uuid';
 import StackTracey from 'stacktracey';
 
+import { runSuccess, runError } from '@zougui/utils';
+
 import { IConstructedLog } from './types';
+import { Logger } from '../loggers';
 
 export const taskLogFactory = <T extends Record<string, any>, TError extends Record<string, any>, TSuccess extends Record<string, any>>(tasks: Tasks<T, TError, TSuccess>): (new (data: T, taskId?: string) => TaskLogs<T, TError, TSuccess>) => {
   return class TaskLog implements TaskLogs<T, TError & { error?: any }, TSuccess> {
-    readonly taskId: string = uuid.v4();
+    readonly taskId: string;
     readonly data: T;
     _start?: IConstructedLog<T>;
     _success?: IConstructedLog<TSuccess>;
@@ -13,10 +16,7 @@ export const taskLogFactory = <T extends Record<string, any>, TError extends Rec
 
     constructor(data: T, taskId?: string) {
       this.data = data;
-
-      if (taskId) {
-        this.taskId = taskId;
-      }
+      this.taskId = taskId || uuid.v4();
     }
 
     _getSourceLocation(): { file: string; callee: string; line?: number; } {
@@ -30,6 +30,27 @@ export const taskLogFactory = <T extends Record<string, any>, TError extends Rec
       const callee = stackFrame.callee;
 
       return { file, callee, line };
+    }
+
+    exec<T>(task: (() => T), logger: Logger | OnLog<T, TSuccess, TError>): T {
+      const onLogs = logger instanceof Logger
+        ? {
+          onStart: logger.info,
+          onSuccess: logger.info,
+          onError: logger.error,
+        }
+        : logger
+
+      const logStart = () => onLogs.onStart(this.start() as any);
+      const logError = (error: any) => onLogs.onError(this.error({ error } as (TError & { error: any })) as any);
+      const logSuccess = () => onLogs.onSuccess(this.success({} as TSuccess) as any);
+
+      const execTask = (): T => {
+        logStart();
+        return task();
+      }
+
+      return runError(() => runSuccess(execTask, logSuccess), logError);
     }
 
     start(): IConstructedLog<T> {
@@ -85,4 +106,11 @@ export interface TaskLogs<T extends Record<string, any>, TError extends Record<s
   start: () => IConstructedLog<T>;
   success: (data: TSuccess) => IConstructedLog<TSuccess>;
   error: (data: TError & { error?: any }) => IConstructedLog<TError & { error?: any }>;
+  exec<T>(task: (() => T), onLog: Logger | OnLog<T, TSuccess, TError>): T;
+}
+
+export interface OnLog<T extends Record<string, any>, TError extends Record<string, any>, TSuccess extends Record<string, any>> {
+  onStart: (log: IConstructedLog<T>) => void;
+  onSuccess: (log: IConstructedLog<TSuccess>) => void;
+  onError: (log: IConstructedLog<TError & { error?: any }>) => void;
 }

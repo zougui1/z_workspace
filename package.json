@@ -5,6 +5,7 @@
     "start:zrpg": "pm2 start projects/zrpg/ecosystem/ecosystem.config.js --env development",
     "start:zprint": "pm2 start projects/zprint/ecosystem/ecosystem.config.js --env development",
 
+    "start:log-service": "pm2 start services/log-service/ecosystem/ecosystem.config.js --env development",
     "start:user-service": "pm2 start services/user-service/ecosystem/ecosystem.config.js --env development",
     "start:storage-service": "pm2 start services/storage-service/ecosystem/ecosystem.config.js --env development",
 

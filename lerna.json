@@ -18,7 +18,17 @@
     "projects/*/src/technical-packages/*",
     "projects/*/src/prototype-packages/*",
     "projects/*/src/http-packages/*",
-    "projects/*/src/apps/*"
+    "projects/*/src/apps/*",
+
+    "services/*/ecosystem",
+    "services/*/src/react-packages/*",
+    "services/*/src/react-http-packages/*",
+    "services/*/src/type-packages/*",
+    "services/*/src/business-packages/*",
+    "services/*/src/technical-packages/*",
+    "services/*/src/prototype-packages/*",
+    "services/*/src/http-packages/*",
+    "services/*/src/apps/*"
   ],
   "version": "1.0.0"
 }

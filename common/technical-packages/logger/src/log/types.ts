@@ -22,6 +22,7 @@ export interface IConstructedLog<T extends Record<string, any> = any> {
   readonly code: string;
   readonly task?: ILogTask;
   readonly topics: string[];
+  readonly namespace?: string;
   readonly message: (context: LogContext<T>) => string;
   readonly transaction?: ILogTransaction;
   readonly createdAt: string;
@@ -32,6 +33,7 @@ export interface IConstructedLog<T extends Record<string, any> = any> {
   setTaskId(taskId: string): this;
   setTaskTiming(timing: ILogTask['timing']): this;
   setLevel(level: LogLevel): this;
+  setNamespace(namespace: string): this;
   getConfig(): PartialDeep<LoggerConfig> | undefined;
   getLog(): ILog<T>;
 }

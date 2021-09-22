@@ -7,6 +7,7 @@ export interface ILog<T extends Record<string, any> = any> {
   logId: string;
   level: LogLevel;
   code: string;
+  namespace: string;
   task?: ILogTask;
   topics: string[];
   message: string;

@@ -5,7 +5,7 @@ export type LoggerBaseConfig = {
 }
 
 export type BatchConfig = {
-  interval: number;
+  interval: number | string;
   logCount: {
     min: number;
     max: number;
@@ -16,10 +16,6 @@ export type LoggerConsoleConfig = boolean | LoggerBaseConfig;
 
 export type LoggerFileConfig = boolean | {
   file: string;
-} & LoggerBaseConfig;
-
-export type LoggerDatabaseConfig = {
-  batch: BatchConfig;
 } & LoggerBaseConfig;
 
 export type LoggerHttpConfig = {
@@ -54,7 +50,6 @@ export interface LoggerConfig {
 
   console?: LoggerConsoleConfig;
   file?: LoggerFileConfig;
-  database?: LoggerDatabaseConfig;
   http?: LoggerHttpConfig;
   email?: LoggerEmailConfig;
   discord?: LoggerDiscordConfig;

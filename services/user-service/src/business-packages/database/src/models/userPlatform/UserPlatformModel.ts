@@ -1,41 +1,41 @@
-import { Model } from '@zougui/database-core';
+import { Model, Table, Log, JsonColumn, HasMany } from '@zougui/database-core';
 
 import { connectOnce } from '../../connect';
+import { LoginActivityModel } from '../loginActivity/LoginActivityModel';
 
-export class UserPlatform extends Model {
-  static jsonAttributes = ['platform'];
+@Table(connectOnce)
+@Log()
+export class UserPlatformModel extends Model {
 
   type!: UserPlatformType;
   trusted!: boolean;
   userAgent!: string;
   deviceName?: string;
+  @JsonColumn()
   platform?: {
     os: string;
     version: string;
   };
+  @HasMany(() => LoginActivityModel)
+  loginActivity!: LoginActivityModel[];
   createdAt!: Date;
   updatedAt!: Date;
 
-  static get relationMappings() {
-    const { LoginActivity } = require('../loginActivity/LoginActivityModel');
+  //! check if things work correctly as `loginActivity` is not saved in DB in the `UserPlatform` table
+  /*static get relationMappings() {
+    //const { LoginActivityModel } = require('../loginActivity/LoginActivityModel');
 
     return {
       platform: {
         relation: Model.HasManyRelation,
-        modelClass: LoginActivity,
+        modelClass: LoginActivityModel,
         join: {
           from: 'user_platforms.id',
           to: 'login_activities.platformId',
         },
       },
     };
-  }
-}
-
-export const UserPlatformModel = UserPlatform.connect(connectOnce);
-
-export namespace UserPlatformModel {
-  export type Instance = InstanceType<typeof UserPlatformModel>;
+  }*/
 }
 
 export enum UserPlatformType {

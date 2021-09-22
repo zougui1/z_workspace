@@ -3,8 +3,8 @@ import { controller, IAppController, Context, HttpResponse, HttpResponseOK, Hook
 import { Cors } from '@zougui/cors';
 import { resolveHttpErrorResponse } from '@zougui/http-error';
 
-import { ApiController } from './api';
-import { AuthController } from './auth';
+import { V1Controller } from './v1';
+import { AuthController } from './v1/auth';
 import { OpenApiController } from './open-api.controller';
 
 @Cors()
@@ -23,7 +23,7 @@ import { OpenApiController } from './open-api.controller';
 })
 export class AppController implements IAppController {
   subControllers = [
-    controller('/api', ApiController),
+    controller('/api', V1Controller),
     controller('/auth', AuthController),
     controller('/swagger', OpenApiController),
   ];
@@ -33,6 +33,8 @@ export class AppController implements IAppController {
   }
 
   handleError(error: any, ctx: Context): HttpResponse | Promise<HttpResponse> {
+    console.log('AppController.handleError')
+
     if (isHttpResponse(error)) {
       return error;
     }
